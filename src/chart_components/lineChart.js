@@ -18,6 +18,7 @@ export default function LineChart({ data }) {
       0: { pointSize: 5 }, // Dataset 1 with visible points
       1: { pointSize: 5 }, // Dataset 2 with visible points
       2: { pointSize: 5 },
+      3: { pointSize: 5 },
     },
     legend: "right",
     // titleTextStyle: {
