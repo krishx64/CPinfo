@@ -4,14 +4,16 @@ import "./App.css";
 import {
   calculate_CF_verdicts,
   calculate_CF_Accepted,
+  calculate_CF_contestRatings,
 } from "./calculate/codeforces.js";
 import PieChart from "./chart_components/PieChart.js";
 import LineChart from "./chart_components/lineChart.js";
 
 const { result } = await fetchProblemData("jaiswalxkrish");
+const contestData = await fetchContestData("jaiswalxkrish");
+const contestRatings = calculate_CF_contestRatings(contestData.result);
 const verdictOk = calculate_CF_Accepted(result);
 const allData = calculate_CF_verdicts(result);
-
 export default function App() {
   return (
     <div>
@@ -20,7 +22,7 @@ export default function App() {
         <h2>No. of problems solved in Codeforces: {verdictOk.length}</h2>
         <PieChart data={allData} />
       </div>
-      <LineChart />
+      <LineChart data={contestRatings} />
     </div>
   );
 }

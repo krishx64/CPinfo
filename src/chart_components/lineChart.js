@@ -1,5 +1,5 @@
 import { Chart } from "react-google-charts";
-export default function LineChart() {
+export default function LineChart({ data }) {
   const dataL = [
     ["Time", "Dataset 1", "Dataset 2"], // Headers
     [0, 0, 0],
@@ -43,7 +43,7 @@ export default function LineChart() {
         chartType="LineChart"
         width="100%"
         height="400px"
-        data={dataL}
+        data={data}
         options={option}
       />
     </div>

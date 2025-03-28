@@ -42,4 +42,26 @@ function calculate_CF_Accepted(Submissions) {
   });
   return verdictOk;
 }
-module.exports = { calculate_CF_verdicts, calculate_CF_Accepted };
+function convertEpochToSpecificTimezone(timeEpoch, offset) {
+  var d = new Date(timeEpoch);
+  var utc = d.getTime() + d.getTimezoneOffset() * 60000; //This converts to UTC 00:00
+  var nd = new Date(utc + 3600000 * offset);
+  return nd.toLocaleString();
+}
+function calculate_CF_contestRatings(Contests) {
+  let contestRatings = [["Time", "Codeforces"]];
+  for (let i = 0; i < Contests.length; i++) {
+    contestRatings.push([
+      new Date(Contests[i].ratingUpdateTimeSeconds * 1000),
+      Contests[i].newRating,
+    ]);
+  }
+  console.log(contestRatings);
+  console.log(Contests);
+  return contestRatings;
+}
+module.exports = {
+  calculate_CF_verdicts,
+  calculate_CF_Accepted,
+  calculate_CF_contestRatings,
+};
