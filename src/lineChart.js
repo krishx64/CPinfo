@@ -1,5 +1,5 @@
 import { Chart } from "react-google-charts";
-export default function PieChart({ data }) {
+export default function LineChart({ data }) {
   const optionPie = {
     title: "Submissions",
   };

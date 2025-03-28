@@ -1,59 +1,51 @@
 import { fetchContestData, fetchProblemData } from "./api/codeforces.js";
+import React from "react";
+import "./PieChart.js";
+import {
+  calculate_CF_verdicts,
+  calculate_CF_Accepted,
+} from "./calculate/codeforces.js";
 import { Chart } from "react-google-charts";
+import PieChart from "./PieChart.js";
 
 const { result } = await fetchProblemData("jaiswalxkrish");
-let verdictOk = result;
-let allVerdict = new Map();
-for (let i = 0; i < verdictOk.length; i++) {
-  allVerdict.get(verdictOk[i].verdict)
-    ? allVerdict.set(
-        verdictOk[i].verdict,
-        allVerdict.get(verdictOk[i].verdict) + 1
-      )
-    : allVerdict.set(verdictOk[i].verdict, 1);
-}
-let allDataTemp = [];
-for (let [value, key] of allVerdict) {
-  allDataTemp.push([key, value]);
-}
-allDataTemp.sort(sortFunction);
-
-function sortFunction(a, b) {
-  if (a[0] === b[0]) {
-    return 0;
-  } else {
-    return a[0] > b[0] ? -1 : 1;
-  }
-}
-let allData = [["Verdict", "Count"]];
-for (let i = 0; i < allDataTemp.length; i++) {
-  allData.push([allDataTemp[i][1], allDataTemp[i][0]]);
-}
-console.log(allDataTemp);
-verdictOk = verdictOk.filter((problem) => problem.verdict === "OK");
-const solvedProblems = new Map();
-verdictOk = verdictOk.filter((problem) => {
-  if (solvedProblems.get(problem.problem.name) === problem.problem.contestId) {
-    return false;
-  }
-  solvedProblems.set(problem.problem.name, problem.problem.contestId);
-  return true;
-});
+let verdictOk = calculate_CF_Accepted(result);
+let allData = calculate_CF_verdicts(result);
 
 export default function App() {
-  const options = {
-    title: "Submissions",
+  const dataL = [
+    ["x", "dogs"],
+    [0, 0],
+    [1, 10],
+    [2, 23],
+    [3, 17],
+    [4, 18],
+    [5, 9],
+    [6, 11],
+    [7, 27],
+    [8, 33],
+    [9, 40],
+    [10, 32],
+    [11, 35],
+  ];
+
+  const optionLine = {
+    title: "Line Chart Example",
+    hAxis: { title: "Time" },
+    vAxis: { title: "Popularity" },
+    legend: "none",
   };
   return (
     <div>
       <h1>Hello, Nigga!</h1>
       <h2>No. of problems solved in Codeforces: {verdictOk.length}</h2>
+      <PieChart data={allData} />
       <Chart
-        chartType="PieChart"
-        data={allData}
-        options={options}
-        width={"100%"}
-        height={"400px"}
+        chartType="LineChart"
+        width="100%"
+        height="400px"
+        data={dataL}
+        options={optionLine}
       />
     </div>
   );
