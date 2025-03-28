@@ -4,17 +4,17 @@ export default function PieChart({ data }) {
     title: "Total submissions",
     pieHole: 0.4,
     is3D: false,
-    backgroundColor: "#28282B",
-    titleTextStyle: {
-      color: "#FFFFFF", // Title text color
-      fontSize: 18,
-      bold: true,
-    },
+    // backgroundColor: "#28282B",
+    // titleTextStyle: {
+    //   color: "#FFFFFF", // Title text color
+    //   fontSize: 18,
+    //   bold: true,
+    // },
     legend: {
-      textStyle: {
-        color: "#FFFFFF", // Legend text color
-        fontSize: 14,
-      },
+      // textStyle: {
+      //   color: "#FFFFFF", // Legend text color
+      //   fontSize: 14,
+      // },
     },
   };
   return (
