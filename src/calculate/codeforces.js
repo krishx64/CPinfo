@@ -32,21 +32,21 @@ function calculate_CF_Accepted(Submissions) {
   verdictOk = verdictOk.filter((problem) => problem.verdict === "OK");
   const solvedProblems = new Map();
   verdictOk = verdictOk.filter((problem) => {
+    if (solvedProblems[problem.problem.contestId] === undefined) {
+      solvedProblems[problem.problem.contestId] = [];
+    }
     if (
-      solvedProblems.get(problem.problem.name) === problem.problem.contestId
+      solvedProblems[problem.problem.contestId].find((index) => {
+        return index === problem.problem.index;
+      }) !== undefined
     ) {
       return false;
     }
-    solvedProblems.set(problem.problem.name, problem.problem.contestId);
+    solvedProblems[problem.problem.contestId].push(problem.problem.index);
     return true;
   });
+  console.log(verdictOk);
   return verdictOk;
-}
-function convertEpochToSpecificTimezone(timeEpoch, offset) {
-  var d = new Date(timeEpoch);
-  var utc = d.getTime() + d.getTimezoneOffset() * 60000; //This converts to UTC 00:00
-  var nd = new Date(utc + 3600000 * offset);
-  return nd.toLocaleString();
 }
 function calculate_CF_contestRatings(Contests) {
   let contestRatings = [["Time", "Codeforces"]];
@@ -56,8 +56,6 @@ function calculate_CF_contestRatings(Contests) {
       Contests[i].newRating,
     ]);
   }
-  console.log(contestRatings);
-  console.log(Contests);
   return contestRatings;
 }
 module.exports = {

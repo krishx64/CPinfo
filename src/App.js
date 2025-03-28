@@ -9,15 +9,16 @@ import {
 import PieChart from "./chart_components/PieChart.js";
 import LineChart from "./chart_components/lineChart.js";
 
-const { result } = await fetchProblemData("jaiswalxkrish");
-const contestData = await fetchContestData("jaiswalxkrish");
+const username = "kelvin_0179";
+const { result } = await fetchProblemData(username);
+const contestData = await fetchContestData(username);
 const contestRatings = calculate_CF_contestRatings(contestData.result);
 const verdictOk = calculate_CF_Accepted(result);
 const allData = calculate_CF_verdicts(result);
 export default function App() {
   return (
     <div>
-      <h1>Hello, Nigga!</h1>
+      <h1>Hello, {username}!</h1>
       <div class="info-container">
         <h2>No. of problems solved in Codeforces: {verdictOk.length}</h2>
         <PieChart data={allData} />
