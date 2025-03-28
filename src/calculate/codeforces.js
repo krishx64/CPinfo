@@ -45,15 +45,14 @@ function calculate_CF_Accepted(Submissions) {
     solvedProblems[problem.problem.contestId].push(problem.problem.index);
     return true;
   });
-  console.log(verdictOk);
   return verdictOk;
 }
-function calculate_CF_contestRatings(Contests) {
-  let contestRatings = [["Time", "Codeforces"]];
+function calculate_CF_contestRatings(Contests, contestRatings) {
+  contestRatings[0].push("Codeforces");
   for (let i = 0; i < Contests.length; i++) {
     contestRatings.push([
       new Date(Contests[i].ratingUpdateTimeSeconds * 1000),
-      Contests[i].newRating,
+      parseInt(Contests[i].newRating),
     ]);
   }
   return contestRatings;

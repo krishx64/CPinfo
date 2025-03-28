@@ -1,4 +1,8 @@
-import { fetchContestData, fetchProblemData } from "./api/codeforces.js";
+import {
+  fetchContestData as fetchCfContestData,
+  fetchProblemData as fetchCfProblemData,
+} from "./api/codeforces.js";
+import { fetchData as fetchCcData } from "./api/codechef.js";
 import React from "react";
 import "./App.css";
 import {
@@ -6,19 +10,30 @@ import {
   calculate_CF_Accepted,
   calculate_CF_contestRatings,
 } from "./calculate/codeforces.js";
+import { calculate_CC_contestRatings } from "./calculate/codechef.js";
 import PieChart from "./chart_components/PieChart.js";
 import LineChart from "./chart_components/lineChart.js";
 
-const username = "kelvin_0179";
-const { result } = await fetchProblemData(username);
-const contestData = await fetchContestData(username);
-const contestRatings = calculate_CF_contestRatings(contestData.result);
+const CFhandle = "jaiswalXkrish";
+const CChandle = "krishx64";
+let contestRatings = [["Time"]];
+const { result } = await fetchCfProblemData(CFhandle);
+const contestData = await fetchCfContestData(CFhandle);
+contestRatings = calculate_CF_contestRatings(
+  contestData.result,
+  contestRatings
+);
 const verdictOk = calculate_CF_Accepted(result);
 const allData = calculate_CF_verdicts(result);
+
+const { ratingData } = await fetchCcData(CChandle);
+contestRatings = calculate_CC_contestRatings(ratingData, contestRatings);
+
+console.log(contestRatings);
 export default function App() {
   return (
     <div>
-      <h1>Hello, {username}!</h1>
+      <h1>Hello, {CFhandle}!</h1>
       <div class="info-container">
         <h2>No. of problems solved in Codeforces: {verdictOk.length}</h2>
         <PieChart data={allData} />
