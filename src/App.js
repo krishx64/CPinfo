@@ -13,6 +13,8 @@ import {
 import { calculate_CC_contestRatings } from "./calculate/codechef.js";
 import PieChart from "./chart_components/PieChart.js";
 import LineChart from "./chart_components/lineChart.js";
+import { fetchData as fetchLCdata } from "./api/leetcode.js";
+import { calculate_LC_contestRatings } from "./calculate/leetcode.js";
 
 const CFhandle = "jaiswalXkrish";
 const CChandle = "krishx64";
@@ -28,6 +30,12 @@ const allData = calculate_CF_verdicts(result);
 
 const { ratingData } = await fetchCcData(CChandle);
 contestRatings = calculate_CC_contestRatings(ratingData, contestRatings);
+
+const { contestParticipation } = await fetchLCdata(CFhandle);
+contestRatings = calculate_LC_contestRatings(
+  contestParticipation,
+  contestRatings
+);
 
 console.log(contestRatings);
 export default function App() {
