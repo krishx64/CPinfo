@@ -3,6 +3,13 @@ export default function LineChart({ data }) {
   const option = {
     title: "Contest Ratings",
     interpolateNulls: true,
+    explorer: {
+      axis: "horizontal",
+      keepInBounds: true,
+      maxZoomIn: 0.1,
+      maxZoomOut: 1,
+      zoomDelta: 1.1,
+    },
     // backgroundColor: "#28282B", // Background color of the chart
     hAxis: {
       title: "Time",
