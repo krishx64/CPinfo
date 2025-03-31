@@ -17,6 +17,13 @@ app.get("/resources", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// app.get("/fetch", async (req, res) => {
+//   try {
+//     addToDB(req.body);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 //middleware
 app.use(express.static(path.join(__dirname, "build")));
 // app.use(express.static("./public"));
