@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const SolvedProblemCountSchema = new mongoose.Schema({
+const userInfoSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "must provide name"],
@@ -39,4 +39,4 @@ const SolvedProblemCountSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("SolvedProblemCount", SolvedProblemCountSchema);
+module.exports = mongoose.model("userInfo", userInfoSchema);

@@ -1,15 +1,9 @@
-const SolvedProblemCount = require("../models/Solved.js");
-async function addSolvedProblemCount(
-  solvedfn,
-  ratingfn,
-  platform,
-  handle,
-  errorArray
-) {
+const userInfo = require("../models/userInfo.js");
+async function addInfo(solvedfn, ratingfn, platform, handle, errorArray) {
   try {
     const solved = await solvedfn(handle);
     const rating = await ratingfn(handle);
-    await SolvedProblemCount.findOneAndUpdate(
+    await userInfo.findOneAndUpdate(
       { name: platform },
       { handle: handle, solved: solved, ratings: rating },
       {
@@ -25,4 +19,4 @@ async function addSolvedProblemCount(
     console.error("Error in addSolvedProblemCount:", error);
   }
 }
-module.exports = { addSolvedProblemCount };
+module.exports = { addInfo };
