@@ -17,45 +17,43 @@ const {
 const { addInfo } = require("./wrapper.js");
 const userInfo = require("../models/userInfo.js");
 
-let errorArray = [];
-
-async function addToDB() {
-  await addInfo(
-    calculate_AC_solvedProblemCount,
-    calculate_AC_contestRatings,
-    "Atcoder",
-    "jaiswalxkrish",
-    errorArray
-  );
-  await addInfo(
-    calculate_CF_Accepted,
-    calculate_CF_contestRatings,
-    "Codeforces",
-    "jaiswalxkrish",
-    errorArray
-  );
-  await addInfo(
-    calculate_LC_SolvedCount,
-    calculate_LC_contestRatings,
-    "Leetcode",
-    "jaiswalxkrish",
-    errorArray
-  );
-  await addInfo(
-    calculate_CC_solvedProblemCount,
-    calculate_CC_contestRatings,
-    "Codechef",
-    "krishx64",
-    errorArray
-  );
-  app.get("/resources", async (req, res) => {
-    try {
-      const userInfo = await userInfo.find();
-      res.json(resources);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+async function addToDB(handleName, errorArray, cache) {
+  try {
+    errorArray = [];
+    await addInfo(
+      calculate_AC_solvedProblemCount,
+      calculate_AC_contestRatings,
+      "Atcoder",
+      handleName.ac,
+      errorArray
+    );
+    await addInfo(
+      calculate_CF_Accepted,
+      calculate_CF_contestRatings,
+      "Codeforces",
+      handleName.cf,
+      errorArray
+    );
+    await addInfo(
+      calculate_LC_SolvedCount,
+      calculate_LC_contestRatings,
+      "Leetcode",
+      handleName.lc,
+      errorArray
+    );
+    await addInfo(
+      calculate_CC_solvedProblemCount,
+      calculate_CC_contestRatings,
+      "Codechef",
+      handleName.cc,
+      errorArray
+    );
+    cache.resourcesCache = await userInfo.find();
+  } catch (error) {
+    console.error("Error in addToDB:", error.message);
+    errorArray.push("Error updating database: " + error.message);
+    throw error; // Re-throw the error to be handled by the caller
+  }
 }
 module.exports = {
   addToDB,

@@ -20,22 +20,22 @@ const userInfoSchema = new mongoose.Schema({
   ratings: {
     type: [[mongoose.Schema.Types.Mixed]], // Nested array
     default: [],
-    // validate: {
-    //   validator: function (v) {
-    //     // Ensure each sub-array has exactly 2 elements: [Date, Number]
-    //     return (
-    //       Array.isArray(v) &&
-    //       v.every(
-    //         (item) =>
-    //           Array.isArray(item) &&
-    //           item.length === 2 &&
-    //           item[0] instanceof Date &&
-    //           typeof item[1] === "number"
-    //       )
-    //     );
-    //   },
-    //   message: "Each entry in ratings must be an array of [Date, Number].",
-    // },
+    validate: {
+      validator: function (v) {
+        // Ensure each sub-array has exactly 2 elements: [Date, Number]
+        return (
+          Array.isArray(v) &&
+          v.every(
+            (item) =>
+              Array.isArray(item) &&
+              item.length === 2 &&
+              item[0] instanceof Date &&
+              typeof item[1] === "number"
+          )
+        );
+      },
+      message: "Each entry in ratings must be an array of [Date, Number].",
+    },
   },
 });
 

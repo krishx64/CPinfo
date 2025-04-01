@@ -1,8 +1,7 @@
 const userInfo = require("../models/userInfo.js");
 async function addInfo(solvedfn, ratingfn, platform, handle, errorArray) {
   try {
-    if (handle === undefined)
-      await userInfo.findOneAndDelete({ name: platform });
+    if (handle === "") await userInfo.findOneAndDelete({ name: platform });
     else {
       const solved = await solvedfn(handle);
       const rating = await ratingfn(handle);
