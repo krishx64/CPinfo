@@ -5,6 +5,7 @@ const {
 const {
   calculate_CF_Accepted,
   calculate_CF_contestRatings,
+  calculate_CF_stats,
 } = require("../calculate/codeforces.js");
 const {
   calculate_LC_SolvedCount,
@@ -17,7 +18,7 @@ const {
 const { addInfo } = require("./wrapper.js");
 const userInfo = require("../models/userInfo.js");
 
-async function addToDB(handleName, errorArray, cache) {
+async function addToDB(handleName, errorLog, cache) {
   try {
     errorArray = [];
     await addInfo(
@@ -25,33 +26,33 @@ async function addToDB(handleName, errorArray, cache) {
       calculate_AC_contestRatings,
       "Atcoder",
       handleName.ac,
-      errorArray
+      errorLog
     );
     await addInfo(
       calculate_CF_Accepted,
       calculate_CF_contestRatings,
       "Codeforces",
       handleName.cf,
-      errorArray
+      errorLog,
+      calculate_CF_stats
     );
     await addInfo(
       calculate_LC_SolvedCount,
       calculate_LC_contestRatings,
       "Leetcode",
       handleName.lc,
-      errorArray
+      errorLog
     );
     await addInfo(
       calculate_CC_solvedProblemCount,
       calculate_CC_contestRatings,
       "Codechef",
       handleName.cc,
-      errorArray
+      errorLog
     );
     cache.resourcesCache = await userInfo.find();
   } catch (error) {
     console.error("Error in addToDB:", error.message);
-    errorArray.push("Error updating database: " + error.message);
     throw error; // Re-throw the error to be handled by the caller
   }
 }

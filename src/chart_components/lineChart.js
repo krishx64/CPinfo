@@ -10,16 +10,16 @@ export default function LineChart({ data }) {
       maxZoomOut: 1,
       zoomDelta: 1.1,
     },
-    // backgroundColor: "#28282B", // Background color of the chart
+    backgroundColor: "#28282B", // Background color of the chart
     hAxis: {
       title: "Time",
-      // textStyle: { color: "#FFFFFF" }, // X-axis text color
-      // titleTextStyle: { color: "#FFFFFF", bold: true }, // X-axis title color
+      textStyle: { color: "#FFFFFF" }, // X-axis text color
+      titleTextStyle: { color: "#FFFFFF", bold: true }, // X-axis title color
     },
     vAxis: {
       title: "Rating",
-      // textStyle: { color: "#FFFFFF" }, // Y-axis text color
-      // titleTextStyle: { color: "#FFFFFF", bold: true }, // Y-axis title color
+      textStyle: { color: "#FFFFFF" }, // Y-axis text color
+      titleTextStyle: { color: "#FFFFFF", bold: true }, // Y-axis title color
     },
     series: {
       0: { pointSize: 5 }, // Dataset 1 with visible points
@@ -28,11 +28,11 @@ export default function LineChart({ data }) {
       3: { pointSize: 5 },
     },
     legend: "right",
-    // titleTextStyle: {
-    //   color: "#FFFFFF", // Title text color
-    //   fontSize: 18,
-    //   bold: true,
-    // },
+    titleTextStyle: {
+      color: "#FFFFFF", // Title text color
+      fontSize: 18,
+      bold: true,
+    },
   };
   return (
     <div>

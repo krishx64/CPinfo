@@ -37,6 +37,10 @@ const userInfoSchema = new mongoose.Schema({
       message: "Each entry in ratings must be an array of [Date, Number].",
     },
   },
+  stats: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {},
+  },
 });
 
 module.exports = mongoose.model("userInfo", userInfoSchema);

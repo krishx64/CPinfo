@@ -4,10 +4,12 @@ import "./dashboard.css";
 import PieChart from "./chart_components/PieChart.js";
 import LineChart from "./chart_components/lineChart.js";
 import axios from "axios";
+import CalResponsive from "./chart_components/cal-heatmap-responsive.js";
 
 export default function Dashboard() {
   const [errorLog, setErrorLog] = useState([]);
   const [resources, setResources] = useState([]);
+  const [heatmapData, setHeatmapData] = useState([]);
   const [contestRatings, setContestRatings] = useState([["Time"]]);
   const [sum, setSum] = useState(0);
   useEffect(() => {
@@ -17,26 +19,32 @@ export default function Dashboard() {
         .then((response) => setResources(response.data))
         .catch((error) => console.error("Error fetching data", error));
     };
+    const fetchErrorLogs = () => {
+      axios
+        .get("http://localhost:3000/resources/errors")
+        .then((response) => setErrorLog(response.data))
+        .catch((error) => console.error("Error fetching data", error));
+    };
 
     // Fetch resources immediately when the component mounts
-    fetchResources();
+    const fetchAllData = () => {
+      fetchResources();
+      fetchErrorLogs();
+    };
 
-    // Set up an interval to fetch resources every 10 seconds
-    const intervalId = setInterval(fetchResources, 1000);
+    fetchAllData();
 
-    // Cleanup the interval when the component unmounts
-    return () => clearInterval(intervalId);
-  }, []);
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/resources")
-      .then((response) => setResources(response.data))
-      .catch((error) => console.error("Error fetching data", error));
+    // Set up an interval to fetch resources every 1 seconds
+    // const intervalId = setInterval(fetchAllData, 1000);
+
+    // // Cleanup the interval when the component unmounts
+    // return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
     let newContestRatings = [["Time"]];
     let newSum = 0;
+    let newHeatmapData = [];
     resources.forEach((resource, index) => {
       newSum += resource.solved;
       const Contests = resource.ratings;
@@ -53,12 +61,21 @@ export default function Dashboard() {
         temp.push(parseInt(Contests[i][1]));
         newContestRatings.push(temp);
       }
+      if (resource.stats !== undefined) {
+        resource.stats.solved.forEach((problem) => {
+          newHeatmapData.push({
+            date: problem[0],
+            count: problem[1],
+          });
+        });
+      }
     });
+    setHeatmapData(newHeatmapData);
     setContestRatings(newContestRatings);
     setSum(newSum);
   }, [resources]);
   return (
-    <div>
+    <div id="info-container">
       <h1>Hello, World!</h1>
       {resources.map((resource, index) => (
         <h2 key={index}>
@@ -77,6 +94,10 @@ export default function Dashboard() {
           </ul>
         </div>
       )}
+      <div id="parent-div">
+        <h2>Responsive Calendar</h2>
+        <CalResponsive data={heatmapData} />
+      </div>
     </div>
   );
 }

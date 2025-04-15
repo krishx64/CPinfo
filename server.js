@@ -10,11 +10,19 @@ require("dotenv").config();
 const { addToDB } = require("./controllers/addUserInfo");
 // addToDB();
 //middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 app.use(express.static(path.join(__dirname, "build")));
 // app.use(express.static("./public"));
 app.use(express.json());
 
-let errorArray = [];
+let errorLog = { errorArray: [] };
 let cache = { resourcesCache: undefined };
 
 app.get("/resources", async (req, res) => {
@@ -28,16 +36,15 @@ app.get("/resources", async (req, res) => {
 });
 app.get("/resources/errors", async (req, res) => {
   try {
-    console.log(errorArray);
-    res.json(errorArray);
+    res.json(errorLog.errorArray);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 app.post("/api/fetch", async (req, res) => {
   try {
-    errorArray = [];
-    addToDB(req.body, errorArray, cache);
+    errorLog.errorArray = [];
+    addToDB(req.body, errorLog, cache);
     res.status(200).json({ message: "Data received successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });

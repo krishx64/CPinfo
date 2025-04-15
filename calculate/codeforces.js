@@ -53,6 +53,58 @@ async function calculate_CF_Accepted(handle) {
     throw new Error(error);
   }
 }
+async function calculate_CF_stats(handle) {
+  try {
+    console.log("Fetching CF stats...");
+    let { result: verdicts } = await fetchProblemData(handle);
+    verdicts = verdicts.filter((problem) => problem.verdict === "OK");
+    let stats = {
+      solved: new Map(),
+      tags: new Map(),
+      rating: new Map(),
+      difficulty: new Map(),
+    };
+    let flag = new Map();
+    verdicts.forEach((problem) => {
+      if (flag[problem.problem.contestId] === undefined) {
+        flag[problem.problem.contestId] = [];
+      }
+      if (
+        flag[problem.problem.contestId].find((index) => {
+          return index === problem.problem.index;
+        }) !== undefined
+      ) {
+        return false;
+      }
+      flag[problem.problem.contestId].push(problem.problem.index);
+      problem.problem.tags.forEach((tag) => {
+        stats.tags.set(tag, stats.tags.get(tag) + 1 || 1);
+      });
+      stats.solved.set(
+        new Date(problem.creationTimeSeconds * 1000),
+        stats.solved.get(new Date(problem.creationTimeSeconds * 1000)) + 1 || 1
+      );
+      if (problem.problem.rating !== undefined) {
+        stats.rating.set(
+          problem.problem.rating,
+          stats.rating.get(problem.problem.rating) + 1 || 1
+        );
+      }
+      stats.difficulty.set(
+        problem.problem.index,
+        stats.difficulty.get(problem.problem.index) + 1 || 1
+      );
+    });
+    stats.solved = Array.from(stats.solved);
+    stats.tags = Array.from(stats.tags);
+    stats.rating = Array.from(stats.rating);
+    stats.difficulty = Array.from(stats.difficulty);
+    return stats;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+}
 async function calculate_CF_contestRatings(handle) {
   try {
     const { result: Contests } = await fetchContestData(handle);
@@ -73,4 +125,5 @@ module.exports = {
   calculate_CF_verdicts,
   calculate_CF_Accepted,
   calculate_CF_contestRatings,
+  calculate_CF_stats,
 };
