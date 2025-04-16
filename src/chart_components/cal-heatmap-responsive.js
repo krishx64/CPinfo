@@ -5,7 +5,6 @@ import "cal-heatmap/cal-heatmap.css";
 import "./cal-heatmap-custom.css"; // Import your custom CSS file for styling
 
 export default function CalResponsive({ data }) {
-  console.log(data);
   let min_date = null;
   let max_date = null;
   data.forEach((item) => {

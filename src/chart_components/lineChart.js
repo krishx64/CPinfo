@@ -16,11 +16,17 @@ export default function LineChart({ data }) {
       title: "Time",
       textStyle: { color: "#FFFFFF" }, // X-axis text color
       titleTextStyle: { color: "#FFFFFF", bold: true }, // X-axis title color
+      gridlines: {
+        color: "#808080", // Gridline color
+      },
     },
     vAxis: {
       title: "Rating",
       textStyle: { color: "#FFFFFF" }, // Y-axis text color
       titleTextStyle: { color: "#FFFFFF", bold: true }, // Y-axis title color
+      gridlines: {
+        color: "#808080", // Gridline color
+      },
     },
     series: {
       0: { pointSize: 5 }, // Dataset 1 with visible points
@@ -28,7 +34,13 @@ export default function LineChart({ data }) {
       2: { pointSize: 5 },
       3: { pointSize: 5 },
     },
-    legend: "right",
+    legend: {
+      position: "right",
+      textStyle: {
+        color: "#FFFFFF", // Change legend text color
+        fontSize: 14, // Optional: Adjust font size
+      },
+    },
     titleTextStyle: {
       color: "#FFFFFF", // Title text color
       fontSize: 18,

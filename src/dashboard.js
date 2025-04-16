@@ -10,6 +10,7 @@ export default function Dashboard() {
   const [errorLog, setErrorLog] = useState([]);
   const [resources, setResources] = useState([]);
   const [heatmapData, setHeatmapData] = useState([]);
+  const [tags, setTags] = useState([]);
   const [contestRatings, setContestRatings] = useState([["Time"]]);
   const [sum, setSum] = useState(0);
   useEffect(() => {
@@ -35,16 +36,17 @@ export default function Dashboard() {
     fetchAllData();
 
     // Set up an interval to fetch resources every 1 seconds
-    // const intervalId = setInterval(fetchAllData, 1000);
+    const intervalId = setInterval(fetchAllData, 10000);
 
     // // Cleanup the interval when the component unmounts
-    // return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
     let newContestRatings = [["Time"]];
     let newSum = 0;
     let newHeatmapData = [];
+    let newTags = [];
     resources.forEach((resource, index) => {
       newSum += resource.solved;
       const Contests = resource.ratings;
@@ -73,8 +75,13 @@ export default function Dashboard() {
             count: problem[1],
           });
         });
+        newTags.push(["Tags", "Solved"]);
+        resource.stats.tags.forEach((tag) => {
+          newTags.push([tag[0], tag[1]]);
+        });
       }
     });
+    setTags(newTags);
     setHeatmapData(newHeatmapData);
     setContestRatings(newContestRatings);
     setSum(newSum);
@@ -82,12 +89,14 @@ export default function Dashboard() {
   return (
     <div id="info-container">
       <h1>Hello, World!</h1>
-      {resources.map((resource, index) => (
-        <h2 key={index}>
-          No. of problems solved in {resource.name}: {resource.solved}
-        </h2>
-      ))}
-      <h2>Total: {sum}</h2>
+      <div className="solved-info-container">
+        {resources.map((resource, index) => (
+          <h2 key={index}>
+            Solved in {resource.name}: {resource.solved}
+          </h2>
+        ))}
+        <h2>Total: {sum}</h2>
+      </div>
       <LineChart data={contestRatings} />
       {errorLog.length > 0 && (
         <div className="error-log">
@@ -99,6 +108,7 @@ export default function Dashboard() {
           </ul>
         </div>
       )}
+      <PieChart data={tags} />
       <div id="parent-div">
         <h2>Responsive Calendar</h2>
         <CalResponsive data={heatmapData} />

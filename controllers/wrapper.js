@@ -10,9 +10,33 @@ async function addInfo(
   try {
     if (handle === "") await userInfo.findOneAndDelete({ name: platform });
     else {
-      const solved = await solvedfn(handle);
-      const rating = await ratingfn(handle);
-      const stats = await statsfn(handle);
+      let solved = [];
+      let rating = [];
+      let stats = {};
+
+      // Execute each function with its own try-catch block
+      try {
+        solved = await solvedfn(handle);
+      } catch (error) {
+        errorLog.errorArray.push(
+          `Failed to fetch solved problems for ${platform}`
+        );
+        console.error("Error in solvedfn:", error);
+      }
+
+      try {
+        rating = await ratingfn(handle);
+      } catch (error) {
+        errorLog.errorArray.push(`Failed to fetch ratings for ${platform}`);
+        console.error("Error in ratingfn:", error);
+      }
+
+      try {
+        stats = await statsfn(handle);
+      } catch (error) {
+        errorLog.errorArray.push(`Failed to fetch stats for ${platform}`);
+        console.error("Error in statsfn:", error);
+      }
       await userInfo.findOneAndUpdate(
         { name: platform },
         { handle: handle, solved: solved, ratings: rating, stats: stats },
