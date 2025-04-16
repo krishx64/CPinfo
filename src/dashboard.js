@@ -4,7 +4,7 @@ import "./dashboard.css";
 import PieChart from "./chart_components/PieChart.js";
 import LineChart from "./chart_components/lineChart.js";
 import axios from "axios";
-import CalResponsive from "./chart_components/cal-heatmap-responsive.js";
+import Heatmap from "./chart_components/heatmap.js";
 
 export default function Dashboard() {
   const [errorLog, setErrorLog] = useState([]);
@@ -45,7 +45,12 @@ export default function Dashboard() {
   useEffect(() => {
     let newContestRatings = [["Time"]];
     let newSum = 0;
-    let newHeatmapData = [];
+    let newHeatmapData = [
+      [
+        { type: "date", id: "Date" },
+        { type: "number", id: "Solved" },
+      ], // Add column definitions here
+    ];
     let newTags = [];
     resources.forEach((resource, index) => {
       newSum += resource.solved;
@@ -65,15 +70,7 @@ export default function Dashboard() {
       }
       if (resource.stats !== undefined) {
         resource.stats.solved.forEach((problem) => {
-          const localDate = new Date(problem[0]); // Convert to Date object
-          const offset = localDate.getTimezoneOffset(); // Get time zone offset in minutes
-          const adjustedDate = new Date(
-            localDate.getTime() - offset * 60 * 1000
-          );
-          newHeatmapData.push({
-            date: adjustedDate.toISOString().split("T")[0],
-            count: problem[1],
-          });
+          newHeatmapData.push([new Date(problem[0]), parseInt(problem[1])]);
         });
         newTags.push(["Tags", "Solved"]);
         resource.stats.tags.forEach((tag) => {
@@ -111,7 +108,7 @@ export default function Dashboard() {
       <PieChart data={tags} />
       <div id="parent-div">
         <h2>Responsive Calendar</h2>
-        <CalResponsive data={heatmapData} />
+        <Heatmap data={heatmapData} />
       </div>
     </div>
   );

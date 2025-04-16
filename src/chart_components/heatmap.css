@@ -1,0 +1,10 @@
+.heatmap-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #28282B;
+  border-radius: 10px; /* Adjust the border radius */
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);
+  padding: 50px;
+  margin: 10px; /* Optional: Add padding inside the container */
+}
