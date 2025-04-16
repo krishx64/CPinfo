@@ -1,4 +1,5 @@
 import { Chart } from "react-google-charts";
+import "./linechart.css"; // Import your custom CSS file for styling
 export default function LineChart({ data }) {
   const option = {
     title: "Contest Ratings",
@@ -35,7 +36,7 @@ export default function LineChart({ data }) {
     },
   };
   return (
-    <div>
+    <div className="line-chart-container">
       <Chart
         chartType="LineChart"
         width="100%"

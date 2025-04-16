@@ -63,8 +63,13 @@ export default function Dashboard() {
       }
       if (resource.stats !== undefined) {
         resource.stats.solved.forEach((problem) => {
+          const localDate = new Date(problem[0]); // Convert to Date object
+          const offset = localDate.getTimezoneOffset(); // Get time zone offset in minutes
+          const adjustedDate = new Date(
+            localDate.getTime() - offset * 60 * 1000
+          );
           newHeatmapData.push({
-            date: problem[0],
+            date: adjustedDate.toISOString().split("T")[0],
             count: problem[1],
           });
         });
