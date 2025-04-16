@@ -5,11 +5,17 @@ import PieChart from "./chart_components/PieChart.js";
 import LineChart from "./chart_components/lineChart.js";
 import axios from "axios";
 import Heatmap from "./chart_components/heatmap.js";
+import ColumnChart from "./chart_components/columnChart.js";
+import { set } from "mongoose";
 
 export default function Dashboard() {
   const [errorLog, setErrorLog] = useState([]);
   const [resources, setResources] = useState([]);
   const [heatmapData, setHeatmapData] = useState([]);
+  const [solvedRatings, setSolvedRatings] = useState([["Rating", "Solved"]]);
+  const [difficultyRatings, setDifficultyRatings] = useState([
+    ["Difficulty", "Solved"],
+  ]);
   const [tags, setTags] = useState([]);
   const [contestRatings, setContestRatings] = useState([["Time"]]);
   const [sum, setSum] = useState(0);
@@ -52,6 +58,8 @@ export default function Dashboard() {
       ], // Add column definitions here
     ];
     let newTags = [];
+    let newSolvedRatings = [["Rating", "Solved"]];
+    let newDifficultyRatings = [["Difficulty", "Solved"]];
     resources.forEach((resource, index) => {
       newSum += resource.solved;
       const Contests = resource.ratings;
@@ -76,8 +84,16 @@ export default function Dashboard() {
         resource.stats.tags.forEach((tag) => {
           newTags.push([tag[0], tag[1]]);
         });
+        resource.stats.rating.forEach((rating) => {
+          newSolvedRatings.push([rating[0], parseInt(rating[1])]);
+        });
+        resource.stats.difficulty.forEach((index) => {
+          newDifficultyRatings.push([index[0], parseInt(index[1])]);
+        });
       }
     });
+    setSolvedRatings(newSolvedRatings);
+    setDifficultyRatings(newDifficultyRatings);
     setTags(newTags);
     setHeatmapData(newHeatmapData);
     setContestRatings(newContestRatings);
@@ -106,8 +122,14 @@ export default function Dashboard() {
         </div>
       )}
       <PieChart data={tags} />
+      <div className="column-container">
+        <ColumnChart data={solvedRatings} title="Solved problem ratings" />
+        <ColumnChart
+          data={difficultyRatings}
+          title="Solved problem difficulty"
+        />
+      </div>
       <div id="parent-div">
-        <h2>Responsive Calendar</h2>
         <Heatmap data={heatmapData} />
       </div>
     </div>

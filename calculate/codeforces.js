@@ -1,4 +1,6 @@
+const e = require("express");
 const { fetchProblemData, fetchContestData } = require("../api/codeforces");
+const { isNumber } = require("chart.js/helpers");
 function calculate_CF_verdicts(Submissions) {
   let allVerdict = new Map();
   for (let i = 0; i < Submissions.length; i++) {
@@ -96,10 +98,15 @@ async function calculate_CF_stats(handle) {
           stats.rating.get(problem.problem.rating) + 1 || 1
         );
       }
-      stats.difficulty.set(
-        problem.problem.index,
-        stats.difficulty.get(problem.problem.index) + 1 || 1
-      );
+      if (
+        problem.problem.index !== undefined &&
+        !isNumber(problem.problem.index[0])
+      ) {
+        stats.difficulty.set(
+          problem.problem.index[0],
+          stats.difficulty.get(problem.problem.index[0]) + 1 || 1
+        );
+      }
     });
     stats.solved = Array.from(stats.solved);
     stats.tags = Array.from(stats.tags);
