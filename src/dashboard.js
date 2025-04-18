@@ -139,9 +139,7 @@ export default function Dashboard() {
           title="Solved problem difficulty"
         />
       </div> */}
-      <div id="parent-div">
-        <Heatmap data={heatmapData} />
-      </div>
+      <Heatmap data={heatmapData} />
     </div>
   );
 }

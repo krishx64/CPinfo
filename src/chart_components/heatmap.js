@@ -4,6 +4,15 @@ import "./heatmap.css"; // Import your custom CSS file for styling
 import { color } from "chart.js/helpers";
 
 export default function Heatmap({ data }) {
+  const calculateHeight = (data) => {
+    const dates = data.slice(1).map((row) => row[0]); // Extract dates
+    const years = dates.map((date) => new Date(date).getFullYear());
+    const minYear = Math.min(...years);
+    const maxYear = Math.max(...years);
+    const numberOfYears = maxYear - minYear + 1;
+    return numberOfYears * 150; // Approximate 150px per year
+  };
+  const dynamicHeight = calculateHeight(data);
   const options = {
     title: "Acceptance graph",
     calendar: {
@@ -26,21 +35,21 @@ export default function Heatmap({ data }) {
       color: "#FFFFFF",
     },
     colorAxis: {
-      colors: ["#bae4b3", "#74c476", "#31a354", "#006d2c"],
+      colors: ["#a1d99b", "#74c476", "#41ab5d", "#238b45", "#005a32"],
       minValue: 0,
-      maxValue: 4,
+      maxValue: 5,
     },
-    tooltop: {
+    tooltip: {
       isHtml: false,
-      trigger: "focus",
     },
   };
   return (
     <div className="heatmap-container">
       <Chart
+        className="heatmap"
         chartType="Calendar"
-        width="1000px"
-        height="1000px"
+        width="950px"
+        height={`${dynamicHeight}px`}
         data={data}
         options={options}
       />
