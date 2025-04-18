@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 100px;
+  padding-right: 100px;
 }
 .heatmap {
   border-radius: 10px;

@@ -10,7 +10,7 @@ export default function Heatmap({ data }) {
     const minYear = Math.min(...years);
     const maxYear = Math.max(...years);
     const numberOfYears = maxYear - minYear + 1;
-    return numberOfYears * 150; // Approximate 150px per year
+    return 50 + numberOfYears * 150; // Approximate 150px per year
   };
   const dynamicHeight = calculateHeight(data);
   const options = {

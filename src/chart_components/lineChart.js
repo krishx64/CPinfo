@@ -27,6 +27,7 @@ export default function LineChart({ data }) {
       gridlines: {
         color: "#808080", // Gridline color
       },
+      minValue: 0,
     },
     series: {
       0: { pointSize: 5 }, // Dataset 1 with visible points
