@@ -22,4 +22,20 @@ async function fetchProblemSolvedCount(handle) {
     throw new Error(error);
   }
 }
-module.exports = { fetchContestData, fetchProblemSolvedCount };
+async function fetchProblemData(handle) {
+  try {
+    const response = await fetch(
+      `https://thingproxy.freeboard.io/fetch/https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=${handle}&from_second=0`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error: ", error);
+    throw new Error(error);
+  }
+}
+module.exports = {
+  fetchContestData,
+  fetchProblemSolvedCount,
+  fetchProblemData,
+};

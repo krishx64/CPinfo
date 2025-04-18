@@ -6,7 +6,6 @@ import LineChart from "./chart_components/lineChart.js";
 import axios from "axios";
 import Heatmap from "./chart_components/heatmap.js";
 import ColumnChart from "./chart_components/columnChart.js";
-import { set } from "mongoose";
 
 export default function Dashboard() {
   const [errorLog, setErrorLog] = useState([]);
@@ -47,7 +46,7 @@ export default function Dashboard() {
     // // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []);
-
+  console.log(resources);
   useEffect(() => {
     let newContestRatings = [["Time"]];
     let newSum = 0;
@@ -77,23 +76,34 @@ export default function Dashboard() {
         newContestRatings.push(temp);
       }
       if (resource.stats !== undefined) {
+        let heatmapTemp = new Map();
         resource.stats.solved.forEach((problem) => {
-          newHeatmapData.push([new Date(problem[0]), parseInt(problem[1])]);
+          const dateKey = new Date(problem[0]);
+          if (!heatmapTemp.has(dateKey)) {
+            heatmapTemp.set(dateKey, 0);
+          }
+          heatmapTemp.set(
+            dateKey,
+            heatmapTemp.get(dateKey) + parseInt(problem[1])
+          );
         });
-        newTags.push(["Tags", "Solved"]);
-        resource.stats.tags.forEach((tag) => {
-          newTags.push([tag[0], tag[1]]);
-        });
-        resource.stats.rating.forEach((rating) => {
-          newSolvedRatings.push([rating[0], parseInt(rating[1])]);
-        });
-        resource.stats.difficulty.forEach((index) => {
-          newDifficultyRatings.push([index[0], parseInt(index[1])]);
-        });
+        for (const [key, value] of heatmapTemp.entries()) {
+          newHeatmapData.push([key, parseInt(value)]);
+        }
+        // newTags.push(["Tags", "Solved"]);
+        // resource.stats.tags.forEach((tag) => {
+        //   newTags.push([tag[0], tag[1]]);
+        // });
+        // resource.stats.rating.forEach((rating) => {
+        //   newSolvedRatings.push([rating[0], parseInt(rating[1])]);
+        // });
+        // resource.stats.difficulty.forEach((index) => {
+        //   newDifficultyRatings.push([index[0], parseInt(index[1])]);
+        // });
       }
     });
-    setSolvedRatings(newSolvedRatings);
-    setDifficultyRatings(newDifficultyRatings);
+    // setSolvedRatings(newSolvedRatings);
+    // setDifficultyRatings(newDifficultyRatings);
     setTags(newTags);
     setHeatmapData(newHeatmapData);
     setContestRatings(newContestRatings);
@@ -121,14 +131,14 @@ export default function Dashboard() {
           </ul>
         </div>
       )}
-      <PieChart data={tags} />
+      {/* <PieChart data={tags} />
       <div className="column-container">
         <ColumnChart data={solvedRatings} title="Solved problem ratings" />
         <ColumnChart
           data={difficultyRatings}
           title="Solved problem difficulty"
         />
-      </div>
+      </div> */}
       <div id="parent-div">
         <Heatmap data={heatmapData} />
       </div>

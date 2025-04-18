@@ -1,6 +1,7 @@
 const {
   calculate_AC_solvedProblemCount,
   calculate_AC_contestRatings,
+  calculate_AC_stats,
 } = require("../calculate/atcoder.js");
 const {
   calculate_CF_Accepted,
@@ -10,6 +11,7 @@ const {
 const {
   calculate_LC_SolvedCount,
   calculate_LC_contestRatings,
+  calculate_LC_stats,
 } = require("../calculate/leetcode.js");
 const {
   calculate_CC_solvedProblemCount,
@@ -26,7 +28,8 @@ async function addToDB(handleName, errorLog, cache) {
       calculate_AC_contestRatings,
       "Atcoder",
       handleName.ac,
-      errorLog
+      errorLog,
+      calculate_AC_stats
     );
     await addInfo(
       calculate_CF_Accepted,
@@ -41,7 +44,8 @@ async function addToDB(handleName, errorLog, cache) {
       calculate_LC_contestRatings,
       "Leetcode",
       handleName.lc,
-      errorLog
+      errorLog,
+      calculate_LC_stats
     );
     await addInfo(
       calculate_CC_solvedProblemCount,

@@ -1,10 +1,9 @@
+const { LeetCode } = require("leetcode-query");
+const leetcode = new LeetCode();
 async function fetchContestData(handle) {
   try {
-    const response = await fetch(
-      `https://alfa-leetcode-api.onrender.com/${handle}/contest`
-    );
-    const data = await response.json();
-    return data;
+    const response = await leetcode.user_contest_info(handle);
+    return response;
   } catch (error) {
     console.error("Error: ", error);
     throw new Error(error);
@@ -12,11 +11,8 @@ async function fetchContestData(handle) {
 }
 async function fetchProblemData(handle) {
   try {
-    const response = await fetch(
-      `https://alfa-leetcode-api.onrender.com/${handle}/solved`
-    );
-    const data = await response.json();
-    return data;
+    const response = await leetcode.user(handle);
+    return response;
   } catch (error) {
     console.error("Error: ", error);
     throw new Error(error);

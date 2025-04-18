@@ -7,7 +7,6 @@ export default function ColumnChart({ data, title }) {
   const rows = data.slice(1);
   rows.sort();
   data = [header, ...rows];
-  console.log(data);
   const option = {
     title: title,
     backgroundColor: "#28282B",

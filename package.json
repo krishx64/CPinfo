@@ -10,6 +10,7 @@
     "cra-template": "1.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "leetcode-query": "^2.0.0",
     "mongoose": "^8.13.1",
     "nodemon": "^3.1.9",
     "react": "^19.0.0",
