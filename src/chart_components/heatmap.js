@@ -1,7 +1,6 @@
 import React from "react";
 import { Chart } from "react-google-charts";
 import "./heatmap.css"; // Import your custom CSS file for styling
-import { color } from "chart.js/helpers";
 
 export default function Heatmap({ data }) {
   const calculateHeight = (data) => {
@@ -40,7 +39,7 @@ export default function Heatmap({ data }) {
       maxValue: 5,
     },
     tooltip: {
-      isHtml: false,
+      isHtml: true,
     },
   };
   return (

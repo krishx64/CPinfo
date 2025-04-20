@@ -6,7 +6,6 @@ import LineChart from "./chart_components/lineChart.js";
 import axios from "axios";
 import Heatmap from "./chart_components/heatmap.js";
 import ColumnChart from "./chart_components/columnChart.js";
-import { set } from "mongoose";
 
 export default function Dashboard() {
   const [errorLog, setErrorLog] = useState([]);
@@ -114,10 +113,12 @@ export default function Dashboard() {
             newSolvedRatings.push([rating[0], parseInt(rating[1])]);
           });
         }
+        console.log(resource.stats.difficulty);
         if (resource.stats.difficulty !== undefined) {
           resource.stats.difficulty.forEach((index) => {
             newDifficultyRatings.push([index[0], parseInt(index[1])]);
           });
+          console.log(newDifficultyRatings);
         }
       }
     });
@@ -182,16 +183,13 @@ export default function Dashboard() {
           <div info-container>
             <LineChart data={contestRatings} />
             <PieChart data={tags} />
-            <div className="column-container">
-              <ColumnChart
-                data={solvedRatings}
-                title="Solved problem ratings"
-              />
-              <ColumnChart
-                data={difficultyRatings}
-                title="Solved problem difficulty"
-              />
-            </div>
+            {/* <div className="column-container"> */}
+            <ColumnChart data={solvedRatings} title="Solved problem ratings" />
+            <ColumnChart
+              data={difficultyRatings}
+              title="Solved problem difficulty"
+            />
+            {/* </div> */}
             <Heatmap data={heatmapData} />
           </div>
         );
@@ -206,6 +204,10 @@ export default function Dashboard() {
         return (
           <div>
             <LineChart data={contestRatings} />
+            <ColumnChart
+              data={difficultyRatings}
+              title="Solved problem difficulty"
+            />
             <Heatmap data={heatmapData} />
           </div>
         );

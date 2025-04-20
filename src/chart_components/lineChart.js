@@ -30,10 +30,10 @@ export default function LineChart({ data }) {
       minValue: 0,
     },
     series: {
-      0: { pointSize: 5 }, // Dataset 1 with visible points
-      1: { pointSize: 5 }, // Dataset 2 with visible points
-      2: { pointSize: 5 },
-      3: { pointSize: 5 },
+      0: { pointSize: 4 }, // Dataset 1 with visible points
+      1: { pointSize: 4 }, // Dataset 2 with visible points
+      2: { pointSize: 4 },
+      3: { pointSize: 4 },
     },
     legend: {
       position: "right",
@@ -53,7 +53,7 @@ export default function LineChart({ data }) {
       <Chart
         chartType="LineChart"
         width="100%"
-        height="400px"
+        height="500px"
         data={data}
         options={option}
       />
