@@ -41,7 +41,7 @@ export default function Settings() {
     });
     setHandleName(newHandleName);
   }, [resources]);
-  async function fetchWithAuth(url, options = {}, accessToken, setAccessToken) {
+  async function fetchWithAuth(url, options = {}) {
     // Add Authorization header with access token
     const headers = {
       ...options.headers,
@@ -89,16 +89,10 @@ export default function Settings() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload
     try {
-      const response = await fetchWithAuth(
-        "http://localhost:3000/api/fetch",
-        {
-          method: "POST",
-          body: JSON.stringify(handleName),
-        },
-        accessToken,
-        setAccessToken,
-        setUsername
-      );
+      const response = await fetchWithAuth("http://localhost:3000/api/fetch", {
+        method: "POST",
+        body: JSON.stringify(handleName),
+      });
       console.log("Form submitted successfully:", response.data);
       alert("Form submitted successfully!");
     } catch (error) {
@@ -106,54 +100,68 @@ export default function Settings() {
       alert("Error submitting form. Please try again.");
     }
   };
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:3000/api/logout", {
+        method: "DELETE",
+        credentials: "include",
+      });
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
-    <form className="My-Form" onSubmit={handleSubmit}>
-      <div>
-        <label>
-          Enter Codeforces handle:
-          <input
-            type="text"
-            name="cf"
-            value={handleName.cf}
-            onChange={handleChange}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Enter Atcoder handle:
-          <input
-            type="text"
-            name="ac"
-            value={handleName.ac}
-            onChange={handleChange}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Enter Leetcode handle:
-          <input
-            type="text"
-            name="lc"
-            value={handleName.lc}
-            onChange={handleChange}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Enter Codechef handle:
-          <input
-            type="text"
-            name="cc"
-            value={handleName.cc}
-            onChange={handleChange}
-          />
-        </label>
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+    <div>
+      <form className="My-Form" onSubmit={handleSubmit}>
+        <div>
+          <label>
+            Enter Codeforces handle:
+            <input
+              type="text"
+              name="cf"
+              value={handleName.cf}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Enter Atcoder handle:
+            <input
+              type="text"
+              name="ac"
+              value={handleName.ac}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Enter Leetcode handle:
+            <input
+              type="text"
+              name="lc"
+              value={handleName.lc}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Enter Codechef handle:
+            <input
+              type="text"
+              name="cc"
+              value={handleName.cc}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
   );
 }

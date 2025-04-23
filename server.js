@@ -1,4 +1,3 @@
-// TODO - fix potential issue with login route spam
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -16,12 +15,12 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 // addToDB();
 //middleware
-// app.use(
-//   cors({
-//     origin: "http://localhost:3001", // Your frontend URL
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: "http://localhost:3001", // Your frontend URL
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "build")));
 // app.use(express.static("./public"));
@@ -32,10 +31,10 @@ let errorLog = { errorArray: [] };
 
 app.get("/api/resources/:username", async (req, res) => {
   try {
-    // if (cache.resourcesCache === undefined)
-    //   cache.resourcesCache = await userInfo.find();
     const { username } = req.params;
-    const response = await User.findOne({ username: username });
+    const response = await User.findOne({ username: username }).select(
+      "-password"
+    );
     if (!response) res.status(404).json({ message: "User does not exist" });
     res.status(200).json(response);
   } catch (error) {
@@ -101,8 +100,8 @@ app.post("/api/login", async (req, res) => {
     res
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: false, // set to true in production
-        sameSite: "Lax",
+        secure: true, // set to true in production
+        sameSite: "Strict", //set to Strict in prod, Lax for dev
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       })
       .status(200)
