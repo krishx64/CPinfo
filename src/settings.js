@@ -90,7 +90,7 @@ export default function Settings() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload
     try {
-      const response = await fetchWithAuth("http://localhost:3000/api/fetch", {
+      const response = await fetchWithAuth(`${BASE_URL}/api/fetch`, {
         method: "POST",
         body: JSON.stringify(handleName),
       });
