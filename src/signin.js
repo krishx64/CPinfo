@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import BASE_URL from "./config";
 
 export default function Signin() {
   const [userCredentials, setUserCredentials] = useState({
@@ -96,7 +97,7 @@ export default function Signin() {
     if (Object.keys(newErrors).length === 0) {
       // Submit the form
       axios
-        .post("http://localhost:3000/api/signin", userCredentials)
+        .post(`${BASE_URL}/api/signin`, userCredentials)
         .then((response) => {
           console.log("Form submitted successfully:", response.data);
           alert("Sign-in successful!");

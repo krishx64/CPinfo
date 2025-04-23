@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { navigate } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "./AuthContext";
+import BASE_URL from "./config";
 
 export default function Login() {
   const { setAccessToken, setUsername } = useAuth();
@@ -38,8 +37,7 @@ export default function Login() {
 
     setLoading(true);
     try {
-      console.log(credentials);
-      const res = await fetch("http://localhost:3000/api/login", {
+      const res = await fetch(`${BASE_URL}/api/login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

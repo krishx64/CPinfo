@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
+import BASE_URL from "./config";
 
 export default function Settings() {
   const [resources, setResources] = useState([]);
@@ -14,7 +15,7 @@ export default function Settings() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/resources/${username}`)
+      .get(`${BASE_URL}/api/resources/${username}`)
       .then((response) => setResources(response.data.userStats || []))
       .catch((error) => console.error("Error fetching data", error));
   }, []);
@@ -57,7 +58,7 @@ export default function Settings() {
 
     if (res.status === 401) {
       // Token might be expired — try to refresh it
-      const tokenRes = await fetch("http://localhost:3000/api/token", {
+      const tokenRes = await fetch(`${BASE_URL}/api/token`, {
         method: "POST",
         credentials: "include", // send refreshToken cookie
       });
@@ -102,7 +103,7 @@ export default function Settings() {
   };
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3000/api/logout", {
+      await fetch(`${BASE_URL}/api/logout`, {
         method: "DELETE",
         credentials: "include",
       });

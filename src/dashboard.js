@@ -8,6 +8,7 @@ import axios from "axios";
 import Heatmap from "./chart_components/heatmap.js";
 import ColumnChart from "./chart_components/columnChart.js";
 import { useParams, useNavigate } from "react-router-dom";
+import BASE_URL from "./config";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchResources = () => {
       axios
-        .get(`http://localhost:3000/api/resources/${username}`)
+        .get(`${BASE_URL}/api/resources/${username}`)
         .then((response) => setData(response.data || { userStats: [] }))
         .catch((error) => {
           navigate("/");
