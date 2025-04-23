@@ -39,7 +39,7 @@ export default function Heatmap({ data }) {
       maxValue: 5,
     },
     tooltip: {
-      isHtml: true,
+      isHtml: false,
     },
   };
   return (

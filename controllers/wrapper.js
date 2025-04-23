@@ -1,5 +1,7 @@
-const userInfo = require("../models/userInfo.js");
+const User = require("../models/user"); // your User model
+
 async function addInfo(
+  username,
   solvedfn,
   ratingfn,
   platform,
@@ -8,13 +10,17 @@ async function addInfo(
   statsfn
 ) {
   try {
-    if (handle === "") await userInfo.findOneAndDelete({ name: platform });
-    else {
+    if (!handle) {
+      // Remove that platform's stat from userStats
+      await User.updateOne(
+        { username },
+        { $pull: { userStats: { platform } } }
+      );
+    } else {
       let solved = [];
       let rating = [];
       let stats = {};
 
-      // Execute each function with its own try-catch block
       try {
         solved = await solvedfn(handle);
       } catch (error) {
@@ -37,15 +43,37 @@ async function addInfo(
         errorLog.errorArray.push(`Failed to fetch stats for ${platform}`);
         console.error("Error in statsfn:", error);
       }
-      await userInfo.findOneAndUpdate(
-        { name: platform },
-        { handle: handle, solved: solved, ratings: rating, stats: stats },
+
+      // Try to update the existing platform data
+      const result = await User.updateOne(
+        { username, "userStats.platform": platform },
         {
-          new: true,
-          runValidators: true,
-          upsert: true,
+          $set: {
+            "userStats.$.handle": handle,
+            "userStats.$.solved": solved,
+            "userStats.$.ratings": rating,
+            "userStats.$.stats": stats,
+          },
         }
       );
+
+      // If that platform entry doesn't exist, push it as a new one
+      if (result.matchedCount === 0) {
+        await User.updateOne(
+          { username },
+          {
+            $push: {
+              userStats: {
+                platform,
+                handle,
+                solved,
+                ratings: rating,
+                stats,
+              },
+            },
+          }
+        );
+      }
     }
   } catch (error) {
     errorLog.errorArray.push(

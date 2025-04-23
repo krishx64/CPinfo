@@ -1,4 +1,5 @@
 import React, { use } from "react";
+import { unstable_batchedUpdates } from "react-dom";
 import { useEffect, useState } from "react";
 import "./dashboard.css";
 import PieChart from "./chart_components/PieChart.js";
@@ -6,8 +7,10 @@ import LineChart from "./chart_components/lineChart.js";
 import axios from "axios";
 import Heatmap from "./chart_components/heatmap.js";
 import ColumnChart from "./chart_components/columnChart.js";
+import { useParams } from "react-router-dom";
 
 export default function Dashboard() {
+  const { username } = useParams();
   const [errorLog, setErrorLog] = useState([]);
   const [data, setData] = useState([]);
   const [heatmapData, setHeatmapData] = useState([]);
@@ -25,21 +28,21 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchResources = () => {
       axios
-        .get("http://localhost:3000/resources")
-        .then((response) => setData(response.data))
+        .get(`http://localhost:3000/api/resources/${username}`)
+        .then((response) => setData(response.data.userStats || []))
         .catch((error) => console.error("Error fetching data", error));
     };
-    const fetchErrorLogs = () => {
-      axios
-        .get("http://localhost:3000/resources/errors")
-        .then((response) => setErrorLog(response.data))
-        .catch((error) => console.error("Error fetching data", error));
-    };
+    // const fetchErrorLogs = () => {
+    //   axios
+    //     .get("http://localhost:3000/api/resources/errors")
+    //     .then((response) => setErrorLog(response.data))
+    //     .catch((error) => console.error("Error fetching data", error));
+    // };
 
     // Fetch resources immediately when the component mounts
     const fetchAllData = () => {
       fetchResources();
-      fetchErrorLogs();
+      // fetchErrorLogs();
     };
 
     fetchAllData();
@@ -54,12 +57,14 @@ export default function Dashboard() {
     let newSolvedProblems = new Map();
     let newSum = 0;
     data.forEach((resource) => {
-      newSolvedProblems.set(resource.name.toLowerCase(), resource.solved);
+      newSolvedProblems.set(resource.platform.toLowerCase(), resource.solved);
       newSum += resource.solved;
     });
     handleButtonClick(selectedView);
-    setSolvedProblems(newSolvedProblems);
-    setSum(newSum);
+    unstable_batchedUpdates(() => {
+      setSolvedProblems(newSolvedProblems);
+      setSum(newSum);
+    });
   }, [data]);
   useEffect(() => {
     let newContestRatings = [["Time"]];
@@ -78,7 +83,7 @@ export default function Dashboard() {
       for (let i = 1; i < newContestRatings.length; i++) {
         newContestRatings[i].push(null);
       }
-      newContestRatings[0].push(resource.name);
+      newContestRatings[0].push(resource.platform);
       for (let i = 0; i < Contests.length; i++) {
         let temp = [new Date(Contests[i][0])];
         for (let j = 1; j <= newContestRatings[0].length - 2; j++) {
@@ -113,20 +118,20 @@ export default function Dashboard() {
             newSolvedRatings.push([rating[0], parseInt(rating[1])]);
           });
         }
-        console.log(resource.stats.difficulty);
         if (resource.stats.difficulty !== undefined) {
           resource.stats.difficulty.forEach((index) => {
             newDifficultyRatings.push([index[0], parseInt(index[1])]);
           });
-          console.log(newDifficultyRatings);
         }
       }
     });
-    setSolvedRatings(newSolvedRatings);
-    setDifficultyRatings(newDifficultyRatings);
-    setTags(newTags);
-    setHeatmapData(newHeatmapData);
-    setContestRatings(newContestRatings);
+    unstable_batchedUpdates(() => {
+      setSolvedRatings(newSolvedRatings);
+      setDifficultyRatings(newDifficultyRatings);
+      setTags(newTags);
+      setHeatmapData(newHeatmapData);
+      setContestRatings(newContestRatings);
+    });
   }, [resources]);
   const handleButtonClick = (view) => {
     setSelectedView(view);
@@ -137,28 +142,28 @@ export default function Dashboard() {
         break;
       case "codeforces":
         const codeforcesData = [
-          data.find((resource) => resource.name === "Codeforces"),
+          data.find((resource) => resource.platform === "Codeforces"),
         ];
         setResources(codeforcesData);
         setActiveButton("codeforces");
         break;
       case "codechef":
         const codechefData = [
-          data.find((resource) => resource.name === "Codechef"),
+          data.find((resource) => resource.platform === "Codechef"),
         ];
         setResources(codechefData);
         setActiveButton("codechef");
         break;
       case "atcoder":
         const atcoderData = [
-          data.find((resource) => resource.name === "Atcoder"),
+          data.find((resource) => resource.platform === "Atcoder"),
         ];
         setResources(atcoderData);
         setActiveButton("atcoder");
         break;
       case "leetcode":
         const leetcodeData = [
-          data.find((resource) => resource.name === "Leetcode"),
+          data.find((resource) => resource.platform === "Leetcode"),
         ];
         setResources(leetcodeData);
         setActiveButton("leetcode");
@@ -308,7 +313,7 @@ export default function Dashboard() {
         </button>
         {renderView()}
       </div>
-      {errorLog.length > 0 && (
+      {/* {errorLog.length > 0 && (
         <div className="error-log">
           <h3>Error Log:</h3>
           <ul>
@@ -317,7 +322,7 @@ export default function Dashboard() {
             ))}
           </ul>
         </div>
-      )}{" "}
+      )}{" "} */}
     </div>
   );
 }

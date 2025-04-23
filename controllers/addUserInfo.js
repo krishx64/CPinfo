@@ -18,12 +18,12 @@ const {
   calculate_CC_contestRatings,
 } = require("../calculate/codechef.js");
 const { addInfo } = require("./wrapper.js");
-const userInfo = require("../models/userInfo.js");
 
-async function addToDB(handleName, errorLog, cache) {
+async function addToDB(handleName, username, errorLog) {
   try {
     errorArray = [];
     await addInfo(
+      username,
       calculate_AC_solvedProblemCount,
       calculate_AC_contestRatings,
       "Atcoder",
@@ -32,6 +32,7 @@ async function addToDB(handleName, errorLog, cache) {
       calculate_AC_stats
     );
     await addInfo(
+      username,
       calculate_CF_Accepted,
       calculate_CF_contestRatings,
       "Codeforces",
@@ -40,6 +41,7 @@ async function addToDB(handleName, errorLog, cache) {
       calculate_CF_stats
     );
     await addInfo(
+      username,
       calculate_LC_SolvedCount,
       calculate_LC_contestRatings,
       "Leetcode",
@@ -48,13 +50,13 @@ async function addToDB(handleName, errorLog, cache) {
       calculate_LC_stats
     );
     await addInfo(
+      username,
       calculate_CC_solvedProblemCount,
       calculate_CC_contestRatings,
       "Codechef",
       handleName.cc,
       errorLog
     );
-    cache.resourcesCache = await userInfo.find();
   } catch (error) {
     console.error("Error in addToDB:", error.message);
     throw error; // Re-throw the error to be handled by the caller
