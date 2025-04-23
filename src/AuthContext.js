@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import BASE_URL from "./config";
 
 const AuthContext = createContext();
 
@@ -10,7 +11,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const refreshAccessToken = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/token", {
+        const res = await fetch(`${BASE_URL}/api/token`, {
           method: "POST",
           credentials: "include", // Send cookies
         });
