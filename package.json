@@ -24,7 +24,9 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "server": "nodemon server.js",
+    "prod": "npm run build && npm run server",
+    "server": "node server.js",
+    "dev": "nodemon server.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
