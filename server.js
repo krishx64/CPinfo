@@ -16,12 +16,12 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 // addToDB();
 //middleware
-app.use(
-  cors({
-    origin: "http://localhost:3001", // Your frontend URL
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:3001", // Your frontend URL
+//     credentials: true,
+//   })
+// );
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "build")));
 // app.use(express.static("./public"));
@@ -53,7 +53,6 @@ app.post("/api/fetch", authenticateToken, async (req, res) => {
   try {
     const username = req.user.username;
     const handleName = req.body;
-    console.log(username, handleName);
     errorLog.errorArray = [];
     addToDB(handleName, username, errorLog);
     res.status(200).json({ message: "Data received successfully" });
@@ -80,7 +79,6 @@ app.post("/api/signin", async (req, res) => {
 });
 app.post("/api/login", async (req, res) => {
   try {
-    console.log(req.body);
     const { email, password } = req.body;
     const validUser = await User.findOne({ email: email });
     if (!validUser) return res.status(401).json({ message: "User not found" });

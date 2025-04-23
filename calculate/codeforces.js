@@ -57,7 +57,6 @@ async function calculate_CF_Accepted(handle) {
 }
 async function calculate_CF_stats(handle) {
   try {
-    console.log("Fetching CF stats...");
     let { result: verdicts } = await fetchProblemData(handle);
     verdicts = verdicts.filter((problem) => problem.verdict === "OK");
     let stats = {
