@@ -15,12 +15,12 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 // addToDB();
 //middleware
-app.use(
-  cors({
-    origin: "http://localhost:3001", // Your frontend URL
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:3001", // Your frontend URL
+//     credentials: true,
+//   })
+// );
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "build")));
 // app.use(express.static("./public"));
@@ -35,7 +35,8 @@ app.get("/api/resources/:username", async (req, res) => {
     const response = await User.findOne({ username: username }).select(
       "-password"
     );
-    if (!response) res.status(404).json({ message: "User does not exist" });
+    if (!response)
+      return res.status(404).json({ message: "User does not exist" });
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ error: error.message });

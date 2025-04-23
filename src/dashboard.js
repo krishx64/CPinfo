@@ -7,12 +7,15 @@ import LineChart from "./chart_components/lineChart.js";
 import axios from "axios";
 import Heatmap from "./chart_components/heatmap.js";
 import ColumnChart from "./chart_components/columnChart.js";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+  const [fullName, setFullName] = useState("");
+  const [handle, setHandle] = useState("");
   const { username } = useParams();
   const [errorLog, setErrorLog] = useState([]);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({ userStats: [] });
   const [heatmapData, setHeatmapData] = useState([]);
   const [solvedRatings, setSolvedRatings] = useState([["Rating", "Solved"]]);
   const [difficultyRatings, setDifficultyRatings] = useState([
@@ -29,8 +32,11 @@ export default function Dashboard() {
     const fetchResources = () => {
       axios
         .get(`http://localhost:3000/api/resources/${username}`)
-        .then((response) => setData(response.data.userStats || []))
-        .catch((error) => console.error("Error fetching data", error));
+        .then((response) => setData(response.data || { userStats: [] }))
+        .catch((error) => {
+          navigate("/");
+          console.error("Error fetching data", error);
+        });
     };
     // const fetchErrorLogs = () => {
     //   axios
@@ -56,18 +62,30 @@ export default function Dashboard() {
   useEffect(() => {
     let newSolvedProblems = new Map();
     let newSum = 0;
-    data.forEach((resource) => {
+    let newFullName = "";
+    data.userStats.forEach((resource) => {
       newSolvedProblems.set(resource.platform.toLowerCase(), resource.solved);
       newSum += resource.solved;
     });
+    if (data.firstName !== undefined) {
+      let { firstName, lastName } = data;
+      newFullName =
+        firstName[0].toUpperCase() +
+        firstName.slice(1).toLowerCase() +
+        " " +
+        lastName[0].toUpperCase() +
+        lastName.slice(1).toLowerCase();
+    }
     handleButtonClick(selectedView);
     unstable_batchedUpdates(() => {
+      setFullName(newFullName);
       setSolvedProblems(newSolvedProblems);
       setSum(newSum);
     });
   }, [data]);
   useEffect(() => {
     let newContestRatings = [["Time"]];
+    let newHandle = "";
     let newHeatmapData = [
       [
         { type: "date", id: "Date" },
@@ -78,6 +96,7 @@ export default function Dashboard() {
     let newSolvedRatings = [["Rating", "Solved"]];
     let newDifficultyRatings = [["Difficulty", "Solved"]];
     resources.forEach((resource) => {
+      newHandle = resource.handle;
       const Contests = resource.ratings;
       if (Contests.length === 0) return false;
       for (let i = 1; i < newContestRatings.length; i++) {
@@ -126,6 +145,7 @@ export default function Dashboard() {
       }
     });
     unstable_batchedUpdates(() => {
+      setHandle(newHandle);
       setSolvedRatings(newSolvedRatings);
       setDifficultyRatings(newDifficultyRatings);
       setTags(newTags);
@@ -137,39 +157,39 @@ export default function Dashboard() {
     setSelectedView(view);
     switch (view) {
       case "all":
-        setResources(data);
+        setResources(data.userStats);
         setActiveButton("all");
         break;
       case "codeforces":
         const codeforcesData = [
-          data.find((resource) => resource.platform === "Codeforces"),
+          data.userStats.find((resource) => resource.platform === "Codeforces"),
         ];
         setResources(codeforcesData);
         setActiveButton("codeforces");
         break;
       case "codechef":
         const codechefData = [
-          data.find((resource) => resource.platform === "Codechef"),
+          data.userStats.find((resource) => resource.platform === "Codechef"),
         ];
         setResources(codechefData);
         setActiveButton("codechef");
         break;
       case "atcoder":
         const atcoderData = [
-          data.find((resource) => resource.platform === "Atcoder"),
+          data.userStats.find((resource) => resource.platform === "Atcoder"),
         ];
         setResources(atcoderData);
         setActiveButton("atcoder");
         break;
       case "leetcode":
         const leetcodeData = [
-          data.find((resource) => resource.platform === "Leetcode"),
+          data.userStats.find((resource) => resource.platform === "Leetcode"),
         ];
         setResources(leetcodeData);
         setActiveButton("leetcode");
         break;
       default:
-        setResources(data);
+        setResources(data.userStats);
         setActiveButton("all");
         break;
     }
@@ -186,6 +206,7 @@ export default function Dashboard() {
       case "codeforces":
         return (
           <div info-container>
+            <h3>Handle: {handle}</h3>
             <LineChart data={contestRatings} />
             <PieChart data={tags} />
             {/* <div className="column-container"> */}
@@ -201,6 +222,7 @@ export default function Dashboard() {
       case "codechef":
         return (
           <div>
+            <h3>Handle: {handle}</h3>
             <LineChart data={contestRatings} />
             <Heatmap data={heatmapData} />
           </div>
@@ -208,6 +230,7 @@ export default function Dashboard() {
       case "atcoder":
         return (
           <div>
+            <h3>Handle: {handle}</h3>
             <LineChart data={contestRatings} />
             <ColumnChart
               data={difficultyRatings}
@@ -219,6 +242,7 @@ export default function Dashboard() {
       case "leetcode":
         return (
           <div>
+            <h3>Handle: {handle}</h3>
             <LineChart data={contestRatings} />
             <Heatmap data={heatmapData} />
           </div>
@@ -227,9 +251,10 @@ export default function Dashboard() {
         return null;
     }
   };
+  if (data.username === undefined) return <div></div>;
   return (
     <div id="info-container">
-      <h1>Hello, World!</h1>
+      <h1>{fullName}</h1>
       <div className="button-container">
         <button
           className={
