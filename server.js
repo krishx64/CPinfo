@@ -15,6 +15,8 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 // addToDB();
 //middleware
+
+//comment this for prod
 // app.use(
 //   cors({
 //     origin: "http://localhost:3001", // Your frontend URL

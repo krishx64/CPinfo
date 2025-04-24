@@ -32,7 +32,13 @@ async function calculate_AC_solvedProblemCount(handle) {
 }
 async function calculate_AC_stats(handle) {
   try {
-    let verdicts = await fetchProblemData(handle);
+    let verdicts = await fetchProblemData(handle, 0);
+    let tempVerdict = verdicts;
+    while (tempVerdict.length !== 0) {
+      let time = tempVerdict[tempVerdict.length - 1].epoch_second + 1;
+      tempVerdict = await fetchProblemData(handle, time);
+      tempVerdict.forEach((problem) => verdicts.push(problem));
+    }
     verdicts = verdicts.filter((problem) => problem.result === "AC");
     let stats = {
       solved: new Map(),
@@ -44,18 +50,18 @@ async function calculate_AC_stats(handle) {
         flag[problem.problem_id] = 1;
       } else return false;
       const localDate = new Date(problem.epoch_second * 1000);
-      const normalizedDate = new Date(
-        localDate.getFullYear(),
-        localDate.getMonth(),
-        localDate.getDate()
-      ).toString(); // Normalize to midnight (local timezone)
+      const year = localDate.getFullYear();
+      const month = String(localDate.getMonth() + 1).padStart(2, "0");
+      const day = String(localDate.getDate()).padStart(2, "0");
+      const normalizedDate = `${year}-${month}-${day}`;
       stats.solved.set(
         normalizedDate,
         stats.solved.get(normalizedDate) + 1 || 1
       );
       const index =
         problem.problem_id[problem.problem_id.length - 1].toUpperCase();
-      stats.difficulty.set(index, stats.difficulty.get(index) + 1 || 1);
+      if ((index >= "A" && index <= "Z") || (index >= "a" && index <= "z"))
+        stats.difficulty.set(index, stats.difficulty.get(index) + 1 || 1);
     });
     stats.solved = Array.from(stats.solved);
     stats.difficulty = Array.from(stats.difficulty);

@@ -256,7 +256,7 @@ export default function Dashboard() {
   return (
     <div id="info-container">
       <h1>{fullName}</h1>
-      <div className="button-container">
+      <div className="info-window-container">
         <button
           className={
             activeButton === "all" ? "pressed-button" : "platform-button"
