@@ -55,10 +55,10 @@ export default function Dashboard() {
     fetchAllData();
 
     // Set up an interval to fetch resources every 1 seconds
-    const intervalId = setInterval(fetchAllData, 10000);
+    // const intervalId = setInterval(fetchAllData, 10000);
 
     // // Cleanup the interval when the component unmounts
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
   }, []);
   useEffect(() => {
     let newSolvedProblems = new Map();
