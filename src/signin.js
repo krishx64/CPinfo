@@ -137,7 +137,7 @@ export default function Signin() {
           <input
             type="text"
             name="username"
-            value={userCredentials.username}
+            value={userCredentials.username.toLowerCase()}
             onChange={handleChange}
           />
           {errors.username && <p className="error">{errors.username}</p>}
