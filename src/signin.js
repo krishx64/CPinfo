@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import BASE_URL from "./config";
+import "./login.css";
 
 export default function Signin() {
   const [userCredentials, setUserCredentials] = useState({
@@ -110,11 +111,13 @@ export default function Signin() {
   };
 
   return (
-    <div>
-      <form className="My-form" onSubmit={handleSubmit}>
+    <div className="login-container">
+      <h1>Sign-In</h1>
+      <form className="login-field" onSubmit={handleSubmit}>
         <div>
-          <label>First name</label>
           <input
+            className="input-field"
+            placeholder="First Name"
             type="text"
             name="firstName"
             value={userCredentials.firstName}
@@ -123,8 +126,9 @@ export default function Signin() {
           {errors.firstName && <p className="error">{errors.firstName}</p>}
         </div>
         <div>
-          <label>Last name</label>
           <input
+            className="input-field"
+            placeholder="Last Name"
             type="text"
             name="lastName"
             value={userCredentials.lastName}
@@ -133,8 +137,9 @@ export default function Signin() {
           {errors.lastName && <p className="error">{errors.lastName}</p>}
         </div>
         <div>
-          <label>Username</label>
           <input
+            className="input-field"
+            placeholder="Username"
             type="text"
             name="username"
             value={userCredentials.username.toLowerCase()}
@@ -143,8 +148,9 @@ export default function Signin() {
           {errors.username && <p className="error">{errors.username}</p>}
         </div>
         <div>
-          <label>Email</label>
           <input
+            className="input-field"
+            placeholder="Email"
             type="email"
             name="email"
             value={userCredentials.email}
@@ -153,8 +159,9 @@ export default function Signin() {
           {errors.email && <p className="error">{errors.email}</p>}
         </div>
         <div>
-          <label>Password</label>
           <input
+            className="input-field"
+            placeholder="Password"
             type="password"
             name="password"
             value={userCredentials.password}
@@ -163,8 +170,9 @@ export default function Signin() {
           {errors.password && <p className="error">{errors.password}</p>}
         </div>
         <div>
-          <label>Confirm Password</label>
           <input
+            className="input-field"
+            placeholder="Confirm Password"
             type="password"
             name="confirmPassword"
             value={userCredentials.confirmPassword}
@@ -174,7 +182,9 @@ export default function Signin() {
             <p className="error">{errors.confirmPassword}</p>
           )}
         </div>
-        <button type="submit">Sign-in</button>
+        <button className="authenticate-button" type="submit">
+          Sign-in
+        </button>
       </form>
     </div>
   );

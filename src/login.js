@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "./AuthContext";
 import BASE_URL from "./config";
+import "./login.css";
 
 export default function Login() {
   const { setAccessToken, setUsername } = useAuth();
@@ -63,11 +64,12 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <h1>Login</h1>
+      <form onSubmit={handleSubmit} className="login-field">
         <div>
-          <label>Email</label>
           <input
+            placeholder="Enter email"
+            className="input-field"
             type="email"
             name="email"
             value={credentials.email}
@@ -77,8 +79,9 @@ export default function Login() {
           {errors.email && <p className="error">{errors.email}</p>}
         </div>
         <div>
-          <label>Password</label>
           <input
+            placeholder="Enter password"
+            className="input-field"
             type="password"
             name="password"
             value={credentials.password}
@@ -87,7 +90,11 @@ export default function Login() {
           />
           {errors.password && <p className="error">{errors.password}</p>}
         </div>
-        <button type="submit" disabled={loading}>
+        <button
+          className="authenticate-button"
+          type="submit"
+          disabled={loading}
+        >
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>

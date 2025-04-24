@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
 import BASE_URL from "./config";
+import "./login.css";
 
 export default function Settings() {
   const [resources, setResources] = useState([]);
@@ -114,55 +115,59 @@ export default function Settings() {
   };
 
   return (
-    <div>
-      <form className="My-Form" onSubmit={handleSubmit}>
+    <div className="login-container">
+      <h1>Settings</h1>
+      <form className="login-field" onSubmit={handleSubmit}>
         <div>
-          <label>
-            Enter Codeforces handle:
-            <input
-              type="text"
-              name="cf"
-              value={handleName.cf}
-              onChange={handleChange}
-            />
-          </label>
+          <div className="input-text">Codeforces handle</div>
+          <input
+            className="input-field handle-field"
+            type="text"
+            name="cf"
+            value={handleName.cf}
+            onChange={handleChange}
+          />
         </div>
         <div>
-          <label>
-            Enter Atcoder handle:
-            <input
-              type="text"
-              name="ac"
-              value={handleName.ac}
-              onChange={handleChange}
-            />
-          </label>
+          <div className="input-text">Atcoder handle</div>
+          <input
+            className="input-field handle-field"
+            type="text"
+            name="ac"
+            value={handleName.ac}
+            onChange={handleChange}
+          />
         </div>
         <div>
-          <label>
-            Enter Leetcode handle:
-            <input
-              type="text"
-              name="lc"
-              value={handleName.lc}
-              onChange={handleChange}
-            />
-          </label>
+          <div className="input-text">Leetcode handle</div>
+          <input
+            className="input-field handle-field"
+            type="text"
+            name="lc"
+            value={handleName.lc}
+            onChange={handleChange}
+          />
         </div>
         <div>
-          <label>
-            Enter Codechef handle:
-            <input
-              type="text"
-              name="cc"
-              value={handleName.cc}
-              onChange={handleChange}
-            />
-          </label>
+          <div className="input-text">Codechef handle</div>
+          <input
+            className="input-field handle-field"
+            type="text"
+            name="cc"
+            value={handleName.cc}
+            onChange={handleChange}
+          />
         </div>
-        <button type="submit">Submit</button>
+        <button className="authenticate-button" type="submit">
+          Submit
+        </button>
       </form>
-      <button onClick={handleLogout}>Logout</button>
+      <button
+        className="authenticate-button logout-button"
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
     </div>
   );
 }
