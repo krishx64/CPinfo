@@ -200,6 +200,15 @@ export default function Dashboard() {
     }
   };
   const renderView = () => {
+    if (data.userStats.length === 0)
+      return (
+        <div>
+          <h2>{"No Data Found :("}</h2>
+          <h2>
+            {"If this is your account, you can update your handle in settings"}
+          </h2>
+        </div>
+      );
     switch (selectedView) {
       case "all":
         return (
