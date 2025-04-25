@@ -122,6 +122,7 @@ export default function Settings() {
         <div>
           <div className="input-text">Codeforces handle</div>
           <input
+            placeholder="Enter Codeforces handle"
             className="input-field handle-field"
             type="text"
             name="cf"
@@ -132,6 +133,7 @@ export default function Settings() {
         <div>
           <div className="input-text">Atcoder handle</div>
           <input
+            placeholder="Enter Atcoder handle"
             className="input-field handle-field"
             type="text"
             name="ac"
@@ -142,6 +144,7 @@ export default function Settings() {
         <div>
           <div className="input-text">Leetcode handle</div>
           <input
+            placeholder="Enter Leetcode handle"
             className="input-field handle-field"
             type="text"
             name="lc"
@@ -152,6 +155,7 @@ export default function Settings() {
         <div>
           <div className="input-text">Codechef handle</div>
           <input
+            placeholder="Enter Codechef handle"
             className="input-field handle-field"
             type="text"
             name="cc"
