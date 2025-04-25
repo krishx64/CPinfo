@@ -4,7 +4,20 @@
   padding-top: 2px;
   padding-left: 1px;
 }
-
+h1,h3,h4{
+  margin: 0;
+}
+h1{
+  font-weight: 500;
+}
+h4{
+  color: rgb(182, 181, 181);
+  font-weight: 300;
+}
+h3{
+  font-weight: 400;
+  margin-left: 10px;
+}
 #info-container{
   display: flex;
   flex-direction: column;
@@ -55,6 +68,7 @@
   font-size: 16px;
   font-size: bold;
   margin: 4px 2px;
+  margin-left: 5px;
   cursor: pointer;
   border-radius: 5px;
   box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);
@@ -70,6 +84,7 @@
   font-size: 16px;
   font-size: bold;
   margin: 4px 2px;
+  margin-left: 5px;
   cursor: pointer;
   border-radius: 5px;
   box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);

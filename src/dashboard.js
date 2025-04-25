@@ -13,6 +13,7 @@ import BASE_URL from "./config";
 export default function Dashboard() {
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
+  const [user, setUser] = useState("");
   const [handle, setHandle] = useState("");
   const { username } = useParams();
   const [errorLog, setErrorLog] = useState([]);
@@ -64,12 +65,14 @@ export default function Dashboard() {
     let newSolvedProblems = new Map();
     let newSum = 0;
     let newFullName = "";
+    let newUser = "";
     data.userStats.forEach((resource) => {
       newSolvedProblems.set(resource.platform.toLowerCase(), resource.solved);
       newSum += resource.solved;
     });
     if (data.firstName !== undefined) {
       let { firstName, lastName } = data;
+      newUser = data.username;
       newFullName =
         firstName[0].toUpperCase() +
         firstName.slice(1).toLowerCase() +
@@ -79,6 +82,7 @@ export default function Dashboard() {
     }
     handleButtonClick(selectedView);
     unstable_batchedUpdates(() => {
+      setUser(newUser);
       setFullName(newFullName);
       setSolvedProblems(newSolvedProblems);
       setSum(newSum);
@@ -256,6 +260,7 @@ export default function Dashboard() {
   return (
     <div id="info-container">
       <h1>{fullName}</h1>
+      <h4>@{user}</h4>
       <div className="info-window-container">
         <button
           className={

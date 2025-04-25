@@ -30,7 +30,7 @@ function App() {
       ) : (
         <>
           <nav>
-            <Link to={`/user/${username}`}>Dashboard</Link> |{" "}
+            <Link to={`/`}>Dashboard</Link> |{" "}
             <Link to={`/settings`}>Settings</Link>
           </nav>
           <Routes>
