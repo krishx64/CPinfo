@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
 import BASE_URL from "./config";
 import "./login.css";
+import { Toast, displayMsg } from "./toast.js";
 
 export default function Login() {
   const { setAccessToken, setUsername } = useAuth();
@@ -9,20 +10,23 @@ export default function Login() {
     email: "",
     password: "",
   });
-
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState("TEST");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredentials({ ...credentials, [name]: value });
   };
-
+  useEffect(() => {
+    validateForm();
+  }, [credentials]);
   const validateForm = () => {
     const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!credentials.email) {
       newErrors.email = "Email is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(credentials.email)) {
+    } else if (!emailRegex.test(credentials.email)) {
       newErrors.email = "Invalid email format.";
     }
     if (!credentials.password) {
@@ -31,7 +35,6 @@ export default function Login() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -46,17 +49,18 @@ export default function Login() {
       });
       if (res.ok) {
         const data = await res.json();
-        setAccessToken(data.accessToken); // set token in context
+        setAccessToken(data.accessToken);
         setUsername(data.username);
-        // navigate("/user/" + data.username);
+      } else {
+        const data = await res.json();
+        displayMsg(data.message, "error");
       }
-      // Redirect user or handle login success
     } catch (error) {
       console.error(
         "Error during login:",
         error.response?.data?.message || error.message
       );
-      alert("Login failed. Please check your credentials and try again.");
+      displayMsg("Login failed.", "error");
     } finally {
       setLoading(false);
     }
@@ -98,6 +102,7 @@ export default function Login() {
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
+      <Toast />
     </div>
   );
 }

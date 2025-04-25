@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "./AuthContext";
 import BASE_URL from "./config";
 import "./login.css";
+import { Toast, displayMsg } from "./toast.js";
 
 export default function Settings() {
   const [resources, setResources] = useState([]);
@@ -96,10 +97,10 @@ export default function Settings() {
         body: JSON.stringify(handleName),
       });
       console.log("Form submitted successfully:", response.data);
-      alert("Form submitted successfully!");
+      displayMsg("Your Submissions Will Be Updated In 10 Minutes", "success");
     } catch (error) {
       console.error("Error submitting form:", error.message);
-      alert("Error submitting form. Please try again.");
+      displayMsg("Error submitting form. Please try again.", "error");
     }
   };
   const handleLogout = async () => {
@@ -159,7 +160,7 @@ export default function Settings() {
           />
         </div>
         <button className="authenticate-button" type="submit">
-          Submit
+          Update
         </button>
       </form>
       <button
@@ -168,6 +169,7 @@ export default function Settings() {
       >
         Logout
       </button>
+      <Toast />
     </div>
   );
 }

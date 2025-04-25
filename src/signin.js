@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import BASE_URL from "./config";
 import "./login.css";
+import { Toast, displayMsg } from "./toast.js";
 
 export default function Signin() {
   const [userCredentials, setUserCredentials] = useState({
@@ -14,7 +15,6 @@ export default function Signin() {
   });
 
   const [errors, setErrors] = useState({}); // State to track validation errors
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -80,7 +80,7 @@ export default function Signin() {
     setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validate all fields
@@ -94,19 +94,23 @@ export default function Signin() {
 
     setErrors(newErrors);
 
-    // Check if there are any errors
     if (Object.keys(newErrors).length === 0) {
-      // Submit the form
-      axios
-        .post(`${BASE_URL}/api/signin`, userCredentials)
-        .then((response) => {
-          console.log("Form submitted successfully:", response.data);
-          alert("Sign-in successful!");
-        })
-        .catch((error) => {
-          console.error("Error submitting form:", error.message);
-          alert("Error submitting form. Please try again.");
+      try {
+        const res = await fetch(`${BASE_URL}/api/signin`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userCredentials),
         });
+        if (res.ok) {
+          displayMsg("Sign-In Successful", "success");
+        } else {
+          const data = await res.json();
+          displayMsg(data.message, "error");
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error.message);
+        displayMsg("Error Submitting Form", "error");
+      }
     }
   };
 
@@ -186,6 +190,7 @@ export default function Signin() {
           Sign-in
         </button>
       </form>
+      <Toast />
     </div>
   );
 }
