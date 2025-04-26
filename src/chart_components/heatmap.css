@@ -12,11 +12,10 @@
   margin: 10px;
   background-color: #22252c;
 }
-.google-visualization-tooltip * {
+.heatmap-container .google-visualization-tooltip *{
   all: unset;
-  background: white;
+  background-color: white;
   color: black;
   font-size: 14px;
-  border-style: none;
-  padding: 0px;
+  padding: 8px;
 }
