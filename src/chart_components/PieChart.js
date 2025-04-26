@@ -1,5 +1,5 @@
 import { Chart } from "react-google-charts";
-import "./piechart.css"; // Import your custom CSS file for styling
+import "./chart.css";
 export default function PieChart({ data }) {
   const sortedData = data.map((row, index) => {
     if (index === 0) return row;
@@ -11,7 +11,7 @@ export default function PieChart({ data }) {
     title: "Tags of solved problems",
     pieHole: 0.4,
     is3D: false,
-    backgroundColor: "#28282B",
+    backgroundColor: "#22252c",
     titleTextStyle: {
       color: "#FFFFFF", // Title text color
       fontSize: 18,
@@ -28,7 +28,7 @@ export default function PieChart({ data }) {
     pieSliceText: "none",
   };
   return (
-    <div className="pie-chart-container">
+    <div className="pie-chart-container chart-container">
       <Chart
         chartType="PieChart"
         data={sortedData}

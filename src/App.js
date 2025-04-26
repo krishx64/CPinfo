@@ -9,7 +9,9 @@ import Dashboard from "./dashboard.js";
 import Settings from "./settings.js";
 import Signin from "./signin.js";
 import Login from "./login.js";
+import "./App.css";
 import { useAuth } from "./AuthContext";
+import icon from "./icon.png";
 
 function App() {
   const { accessToken, username } = useAuth();
@@ -17,8 +19,23 @@ function App() {
     <Router>
       {!accessToken ? (
         <>
-          <nav>
-            <Link to="/signin">Sign-in</Link> | <Link to="/login">Login</Link>
+          <nav className="nav-bar">
+            <a className="site-name-container" href="/">
+              <img className="site-icon" src={icon}></img>
+              <div className="site-name">
+                CPinfo
+                <p className="site-slogan">Code. Compete. Conquer</p>
+              </div>
+            </a>
+            <div className="nav-button-container">
+              <Link className="nav-buttons" to="/signin">
+                Sign-In
+              </Link>{" "}
+              |
+              <Link className="nav-buttons" to="/login">
+                Login
+              </Link>
+            </div>
           </nav>
           <Routes>
             <Route path="/signin" element={<Signin />} />
@@ -29,9 +46,23 @@ function App() {
         </>
       ) : (
         <>
-          <nav>
-            <Link to={`/`}>Dashboard</Link> |{" "}
-            <Link to={`/settings`}>Settings</Link>
+          <nav className="nav-bar">
+            <a className="site-name-container" href="/">
+              <img className="site-icon" src={icon}></img>
+              <div className="site-name">
+                CPinfo
+                <p className="site-slogan">Code. Compete. Conquer</p>
+              </div>
+            </a>
+            <div className="nav-button-container">
+              <Link className="nav-buttons" to={`/`}>
+                Dashboard
+              </Link>{" "}
+              |{" "}
+              <Link className="nav-buttons" to={`/settings`}>
+                Settings
+              </Link>
+            </div>
           </nav>
           <Routes>
             <Route path="/user/:username" element={<Dashboard />} />

@@ -1,6 +1,6 @@
 import React from "react";
 import { Chart } from "react-google-charts";
-import "./columnChart.css"; // Import your custom CSS file for styling
+import "./chart.css";
 
 export default function ColumnChart({ data, title }) {
   const header = data[0];
@@ -12,7 +12,7 @@ export default function ColumnChart({ data, title }) {
   data = [header, ...rows];
   const option = {
     title: title,
-    backgroundColor: "#28282B",
+    backgroundColor: "#22252c",
     colors: [
       "#6e40aa",
       "#963db3",
@@ -66,7 +66,7 @@ export default function ColumnChart({ data, title }) {
     },
   };
   return (
-    <div className="column-chart-container">
+    <div className="column-chart-container chart-container">
       <Chart
         chartType="ColumnChart"
         width="100%"

@@ -1,5 +1,5 @@
 import { Chart } from "react-google-charts";
-import "./linechart.css"; // Import your custom CSS file for styling
+import "./chart.css";
 export default function LineChart({ data }) {
   const option = {
     title: "Contest Ratings",
@@ -11,7 +11,7 @@ export default function LineChart({ data }) {
       maxZoomOut: 1,
       zoomDelta: 1.1,
     },
-    backgroundColor: "#28282B", // Background color of the chart
+    backgroundColor: "#22252c", // Background color of the chart
     hAxis: {
       title: "Time",
       textStyle: { color: "#FFFFFF" }, // X-axis text color
@@ -30,10 +30,10 @@ export default function LineChart({ data }) {
       minValue: 0,
     },
     series: {
-      0: { pointSize: 4 }, // Dataset 1 with visible points
-      1: { pointSize: 4 }, // Dataset 2 with visible points
-      2: { pointSize: 4 },
-      3: { pointSize: 4 },
+      0: { pointSize: 4, color: "#05fff7" },
+      1: { pointSize: 4, color: "#fc0303" },
+      2: { pointSize: 4, color: "#03fc07" },
+      3: { pointSize: 4, color: "#e3fc03" },
     },
     legend: {
       position: "right",
@@ -49,7 +49,7 @@ export default function LineChart({ data }) {
     },
   };
   return (
-    <div className="line-chart-container">
+    <div className="line-chart-container chart-container">
       <Chart
         chartType="LineChart"
         width="100%"

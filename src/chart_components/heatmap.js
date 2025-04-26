@@ -24,14 +24,14 @@ export default function Heatmap({ data }) {
         strokeWidth: 0,
       },
       cellColor: {
-        stroke: "black", // Color the border of the squares.
-        strokeOpacity: 0.5, // Make the borders half transparent.
-        strokeWidth: 2, // ...and two pixels thick.
+        stroke: "black",
+        strokeOpacity: 0.5,
+        strokeWidth: 2,
       },
     },
     noDataPattern: {
-      backgroundColor: "#FFFFFF",
-      color: "#FFFFFF",
+      backgroundColor: "#e9eaf0",
+      color: "#e9eaf0",
     },
     colorAxis: {
       colors: ["#a1d99b", "#74c476", "#41ab5d", "#238b45", "#005a32"],
@@ -39,7 +39,7 @@ export default function Heatmap({ data }) {
       maxValue: 5,
     },
     tooltip: {
-      isHtml: false,
+      isHtml: true,
     },
   };
   return (
