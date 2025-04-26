@@ -22,7 +22,11 @@
     font-size: 17px;
     margin-right: 60px;
 }
+.login-field div{
+    background-color: #22252c;
+}
 .input-field{
+    background-color: #22252c;
     width: 400px;
     height: 28px;
     border-style:solid;
