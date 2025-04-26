@@ -74,7 +74,7 @@ async function fetchSolvedProblems(handle) {
       return { submissions: [], maxPage: null };
     }
   }
-  const username = "krishx64";
+  const username = handle;
   const allSubmissions = [];
   let page = 0;
   let maxPage = null;
