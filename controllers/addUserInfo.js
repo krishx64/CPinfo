@@ -16,6 +16,7 @@ const {
 const {
   calculate_CC_solvedProblemCount,
   calculate_CC_contestRatings,
+  calculate_CC_stats,
 } = require("../calculate/codechef.js");
 const { addInfo } = require("./wrapper.js");
 
@@ -55,7 +56,8 @@ async function addToDB(handleName, username, errorLog) {
       calculate_CC_contestRatings,
       "Codechef",
       handleName.cc,
-      errorLog
+      errorLog,
+      calculate_CC_stats
     );
   } catch (error) {
     console.error("Error in addToDB:", error.message);

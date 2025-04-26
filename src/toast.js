@@ -18,6 +18,11 @@ const displayMsg = (msg, type) => {
     case "success":
       toast.success(msg, { ...options });
       break;
+    case "warn":
+      toast.warn(msg, { ...options });
+      break;
+    default:
+      toast(msg, { ...options });
   }
 };
 function Toast() {

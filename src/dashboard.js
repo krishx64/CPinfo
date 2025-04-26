@@ -8,6 +8,7 @@ import axios from "axios";
 import Heatmap from "./chart_components/heatmap.js";
 import ColumnChart from "./chart_components/columnChart.js";
 import { useParams, useNavigate } from "react-router-dom";
+import "./login.css";
 import BASE_URL from "./config";
 
 export default function Dashboard() {
@@ -265,7 +266,12 @@ export default function Dashboard() {
         return null;
     }
   };
-  if (data.username === undefined) return <div></div>;
+  if (data.username === undefined)
+    return (
+      <div className="login-container">
+        <h1>Loading...</h1>
+      </div>
+    );
   return (
     <div id="info-container">
       <h1>{fullName}</h1>
@@ -353,16 +359,6 @@ export default function Dashboard() {
         </button>
         {renderView()}
       </div>
-      {/* {errorLog.length > 0 && (
-        <div className="error-log">
-          <h3>Error Log:</h3>
-          <ul>
-            {errorLog.map((error, index) => (
-              <li key={index}>{error}</li>
-            ))}
-          </ul>
-        </div>
-      )}{" "} */}
     </div>
   );
 }

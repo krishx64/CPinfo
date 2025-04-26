@@ -13,13 +13,21 @@ export default function Settings() {
     ac: "",
     lc: "",
   });
+  const [loading, setLoading] = useState(true);
   const { accessToken, username, setAccessToken, setUsername } = useAuth();
 
   useEffect(() => {
     axios
       .get(`${BASE_URL}/api/resources/${username}`)
-      .then((response) => setResources(response.data.userStats || []))
-      .catch((error) => console.error("Error fetching data", error));
+      .then((response) => {
+        setResources(response.data.userStats || []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+        displayMsg("Error fetching handles.", "error");
+        setLoading(false);
+      });
   }, []);
 
   const handleChange = (e) => {
@@ -98,6 +106,7 @@ export default function Settings() {
       });
       console.log("Form submitted successfully:", response.data);
       displayMsg("Your Submissions Will Be Updated In 10 Minutes", "success");
+      displayMsg("Codchef may take longer to update.", "warn");
     } catch (error) {
       console.error("Error submitting form:", error.message);
       displayMsg("Error submitting form. Please try again.", "error");
@@ -114,7 +123,12 @@ export default function Settings() {
       console.log(error);
     }
   };
-
+  if (loading)
+    return (
+      <div className="login-container">
+        <h1>Loading...</h1>
+      </div>
+    );
   return (
     <div className="login-container">
       <h1>Settings</h1>
