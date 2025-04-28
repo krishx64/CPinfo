@@ -19,6 +19,7 @@ const {
   calculate_CC_stats,
 } = require("../calculate/codechef.js");
 const { addInfo } = require("./wrapper.js");
+const User = require("../models/user");
 const redisClient = require("../db/redis.js");
 
 async function addToDB(handleName, username, errorLog) {
@@ -68,6 +69,10 @@ async function addToDB(handleName, username, errorLog) {
     for (const platform of Object.keys(handleName)) {
       await redisClient.del(`${username}_${platform}`);
     }
+    const response = await User.findOne({ username: username }).select(
+      "-password"
+    );
+    await redisClient.setEx(username, 600, JSON.stringify(response));
   } catch (error) {
     console.error("Error in redis:", error);
     throw error;

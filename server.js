@@ -32,9 +32,12 @@ let errorLog = { errorArray: [] };
 app.get("/api/resources/:username", async (req, res) => {
   try {
     const { username } = req.params;
+    const cache = await redisClient.get(username);
+    if (cache) return res.status(200).json(JSON.parse(cache));
     const response = await User.findOne({ username: username }).select(
       "-password"
     );
+    await redisClient.setEx(username, 600, JSON.stringify(response));
     if (!response)
       return res.status(404).json({ message: "User does not exist" });
     res.status(200).json(response);
