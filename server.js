@@ -17,12 +17,12 @@ const cors = require("cors");
 
 const DEFAULT_EXPIRATION = 3600;
 //comment this for prod
-app.use(
-  cors({
-    origin: "http://localhost:3001", // Your frontend URL
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:3001", // Your frontend URL
+//     credentials: true,
+//   })
+// );
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "build")));
 app.use(express.json());
