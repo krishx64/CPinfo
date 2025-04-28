@@ -9,6 +9,7 @@ export default function PieChart({ data }) {
   sortedData.sort((a, b) => b[1] - a[1]);
   const options = {
     title: "Tags of solved problems",
+    chartArea: { width: "50%" },
     pieHole: 0.4,
     is3D: false,
     backgroundColor: "#22252c",

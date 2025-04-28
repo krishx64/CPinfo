@@ -1,13 +1,37 @@
 .chart-container {
     display: flex;
-    flex: 1;
     justify-content: center;
     align-items: center;
     background-color: #22252c;
-    border-radius: 10px; /* Adjust the border radius */
+    border-radius: 10px;
     box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);
     margin: 10px;
     padding: 10px;
     width: 1400px;
     margin-bottom: 15px;
+  }
+  .bar-chart-container{
+    width: 500px;
+    height: 300px;
+  }
+  .heatmap-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 100px;
+    background-color: #28282b00;
+  }
+  .heatmap {
+    border-radius: 10px;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);
+    padding: 50px;
+    margin: 10px;
+    background-color: #22252c;
+  }
+  .heatmap-container .google-visualization-tooltip *{
+    all: unset;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    padding: 8px;
   }

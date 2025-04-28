@@ -40,13 +40,7 @@ async function calculate_LC_stats(handle) {
       response.matchedUser.submissionCalendar
     );
     for (const [timestamp, count] of Object.entries(submissionCalendar)) {
-      const localDate = new Date(timestamp * 1000);
-      const year = localDate.getFullYear();
-      const month = String(localDate.getMonth() + 1).padStart(2, "0");
-      const day = String(localDate.getDate()).padStart(2, "0");
-
-      const normalizedDate = `${year}-${month}-${day}`;
-      stats.solved.push([normalizedDate, parseInt(count)]);
+      stats.solved.push([timestamp, parseInt(count)]);
     }
     response.matchedUser.submitStats.acSubmissionNum.forEach((solved) => {
       stats.difficulty.push(solved.difficulty, solved.count);

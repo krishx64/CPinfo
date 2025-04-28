@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import "./dashboard.css";
 import PieChart from "./chart_components/PieChart.js";
 import LineChart from "./chart_components/lineChart.js";
+import BarChart from "./chart_components/barChart.js";
 import axios from "axios";
 import Heatmap from "./chart_components/heatmap.js";
 import ColumnChart from "./chart_components/columnChart.js";
@@ -120,7 +121,16 @@ export default function Dashboard() {
       if (resource.stats !== undefined) {
         let heatmapTemp = new Map();
         resource.stats.solved.forEach((problem) => {
-          const dateKey = new Date(problem[0]);
+          let dateKey = new Date(problem[0]);
+          if (resource.platform === "Codechef") {
+            dateKey = problem[0];
+          } else {
+            const localDate = new Date(problem[0] * 1000);
+            const year = localDate.getFullYear();
+            const month = String(localDate.getMonth() + 1).padStart(2, "0");
+            const day = String(localDate.getDate()).padStart(2, "0");
+            dateKey = `${year}-${month}-${day}`;
+          }
           if (!heatmapTemp.has(dateKey)) {
             heatmapTemp.set(dateKey, 0);
           }
@@ -130,7 +140,7 @@ export default function Dashboard() {
           );
         });
         for (const [key, value] of heatmapTemp.entries()) {
-          newHeatmapData.push([key, parseInt(value)]);
+          newHeatmapData.push([new Date(key), parseInt(value)]);
         }
         newTags.push(["Tags", "Solved"]);
         if (resource.stats.tags !== undefined) {
@@ -212,8 +222,17 @@ export default function Dashboard() {
       );
     switch (selectedView) {
       case "all":
+        // let solvedPlatforms = [["Platform", "Solved"]];
+        // solvedPlatforms.push(...Array.from(solvedProblems));
         return (
           <div>
+            {/* <div className="other-info-container">
+              <BarChart data={solvedPlatforms} />
+              <div className="column-container">
+                <div className="row-card-container"></div>
+                <div className="row-card-container"></div>
+              </div>
+            </div> */}
             <LineChart data={contestRatings} />
             <Heatmap data={heatmapData} />
           </div>

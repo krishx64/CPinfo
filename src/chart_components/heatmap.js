@@ -1,6 +1,6 @@
 import React from "react";
 import { Chart } from "react-google-charts";
-import "./heatmap.css"; // Import your custom CSS file for styling
+import "./chart.css"; // Import your custom CSS file for styling
 
 export default function Heatmap({ data }) {
   const calculateHeight = (data) => {

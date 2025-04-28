@@ -81,15 +81,9 @@ async function calculate_CF_stats(handle) {
       problem.problem.tags.forEach((tag) => {
         stats.tags.set(tag, stats.tags.get(tag) + 1 || 1);
       });
-      const localDate = new Date(problem.creationTimeSeconds * 1000);
-      const year = localDate.getFullYear();
-      const month = String(localDate.getMonth() + 1).padStart(2, "0");
-      const day = String(localDate.getDate()).padStart(2, "0");
-
-      const normalizedDate = `${year}-${month}-${day}`;
       stats.solved.set(
-        normalizedDate,
-        stats.solved.get(normalizedDate) + 1 || 1
+        problem.creationTimeSeconds,
+        stats.solved.get(problem.creationTimeSeconds) + 1 || 1
       );
       if (problem.problem.rating !== undefined) {
         stats.rating.set(

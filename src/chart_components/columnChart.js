@@ -52,13 +52,7 @@ export default function ColumnChart({ data, title }) {
         color: "#808080", // Gridline color
       },
     },
-    legend: {
-      position: "right",
-      textStyle: {
-        color: "#FFFFFF", // Change legend text color
-        fontSize: 14, // Optional: Adjust font size
-      },
-    },
+    legend: "none",
     titleTextStyle: {
       color: "#FFFFFF", // Title text color
       fontSize: 18,

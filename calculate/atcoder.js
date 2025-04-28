@@ -49,14 +49,9 @@ async function calculate_AC_stats(handle) {
       if (flag[problem.problem_id] === undefined) {
         flag[problem.problem_id] = 1;
       } else return false;
-      const localDate = new Date(problem.epoch_second * 1000);
-      const year = localDate.getFullYear();
-      const month = String(localDate.getMonth() + 1).padStart(2, "0");
-      const day = String(localDate.getDate()).padStart(2, "0");
-      const normalizedDate = `${year}-${month}-${day}`;
       stats.solved.set(
-        normalizedDate,
-        stats.solved.get(normalizedDate) + 1 || 1
+        problem.epoch_second,
+        stats.solved.get(problem.epoch_second) + 1 || 1
       );
       const index =
         problem.problem_id[problem.problem_id.length - 1].toUpperCase();
