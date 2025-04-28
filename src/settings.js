@@ -66,7 +66,7 @@ export default function Settings() {
       credentials: "include", // important for cookies (refreshToken)
     });
 
-    if (res.status === 401) {
+    if (res.status === 403) {
       // Token might be expired — try to refresh it
       const tokenRes = await fetch(`${BASE_URL}/api/token`, {
         method: "POST",
@@ -104,9 +104,14 @@ export default function Settings() {
         method: "POST",
         body: JSON.stringify(handleName),
       });
-      console.log("Form submitted successfully:", response.data);
-      displayMsg("Your Submissions Will Be Updated In 10 Minutes", "success");
-      displayMsg("Codchef may take longer to update.", "warn");
+      const data = await response.json();
+      if (response.status === 425) {
+        displayMsg(data.message, "warn");
+      } else {
+        console.log("Form submitted successfully:", response.data);
+        displayMsg("Your Submissions Will Be Updated In 5 Minutes", "success");
+        displayMsg("Codchef may take longer to update.", "warn");
+      }
     } catch (error) {
       console.error("Error submitting form:", error.message);
       displayMsg("Error submitting form. Please try again.", "error");

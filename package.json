@@ -22,7 +22,8 @@
     "react-google-charts": "^5.2.1",
     "react-router-dom": "^7.4.1",
     "react-scripts": "5.0.1",
-    "react-toastify": "^11.0.5"
+    "react-toastify": "^11.0.5",
+    "redis": "^4.7.0"
   },
   "scripts": {
     "prod": "npm run build && npm run server",

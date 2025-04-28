@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 // const tasks = require("./routes/tasks");
 const connectDB = require("./db/connect");
+const redisClient = require("./db/redis");
 // const notFound = require("./middleware/not-found");
 // const errorHandlerMiddleware = require("./middleware/error-handler");
 const RefreshTokens = require("./models/refreshTokens.js");
@@ -13,23 +14,20 @@ const { addToDB } = require("./controllers/addUserInfo");
 const User = require("./models/user.js");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-// addToDB();
-//middleware
 
+const DEFAULT_EXPIRATION = 3600;
 //comment this for prod
-// app.use(
-//   cors({
-//     origin: "http://localhost:3001", // Your frontend URL
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: "http://localhost:3001", // Your frontend URL
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "build")));
-// app.use(express.static("./public"));
 app.use(express.json());
 
 let errorLog = { errorArray: [] };
-// let cache = { resourcesCache: undefined };
 
 app.get("/api/resources/:username", async (req, res) => {
   try {
@@ -55,6 +53,24 @@ app.post("/api/fetch", authenticateToken, async (req, res) => {
   try {
     const username = req.user.username;
     const handleName = req.body;
+
+    // Check if fetching is already in progress for any platform
+    for (const platform of Object.keys(handleName)) {
+      const state = await redisClient.get(`${username}_${platform}`);
+      if (state) {
+        return res.status(425).json({ message: "Fetching in progress" });
+      }
+    }
+
+    // Set fetching state for all platforms
+    for (const platform of Object.keys(handleName)) {
+      await redisClient.setEx(
+        `${username}_${platform}`,
+        DEFAULT_EXPIRATION,
+        "true"
+      );
+      const value = await redisClient.get(`${username}_${platform}`);
+    }
     errorLog.errorArray = [];
     addToDB(handleName, username, errorLog);
     res.status(200).json({ message: "Data received successfully" });
@@ -153,7 +169,6 @@ function authenticateToken(req, res, next) {
 }
 //routes
 
-// app.use("/api/v1/tasks", tasks);
 // app.use(notFound);
 // app.use(errorHandlerMiddleware);
 app.get("*", (req, res) => {

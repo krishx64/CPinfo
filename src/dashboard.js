@@ -32,14 +32,16 @@ export default function Dashboard() {
   const [selectedView, setSelectedView] = useState("all");
   const [activeButton, setActiveButton] = useState("all");
   const [resources, setResources] = useState([]);
+  const [error, setError] = useState("");
+
   useEffect(() => {
     const fetchResources = () => {
       axios
         .get(`${BASE_URL}/api/resources/${username}`)
         .then((response) => setData(response.data || { userStats: [] }))
         .catch((error) => {
-          navigate("/");
           console.error("Error fetching data", error);
+          setError(error);
         });
     };
     // const fetchErrorLogs = () => {
@@ -291,6 +293,13 @@ export default function Dashboard() {
         <h1>Loading...</h1>
       </div>
     );
+  if (error) {
+    return (
+      <div className="login-container">
+        <h1>Error</h1>
+      </div>
+    );
+  }
   return (
     <div id="info-container">
       <h1>{fullName}</h1>
