@@ -5,6 +5,36 @@ const {
 } = require("../api/codechef");
 const User = require("../models/user");
 
+function parseRelativeToEpochSeconds(text) {
+  const now = new Date();
+  const [amountStr, unit] = text.split(" ");
+  const amount = parseInt(amountStr);
+  if (isNaN(amount)) return Math.floor(now.getTime() / 1000);
+
+  let date = new Date(now); // clone
+
+  switch (unit) {
+    case "sec":
+    case "seconds":
+      date.setUTCSeconds(date.getUTCSeconds() - amount);
+      break;
+    case "min":
+    case "minutes":
+      date.setUTCMinutes(date.getUTCMinutes() - amount);
+      break;
+    case "hour":
+    case "hours":
+      date.setUTCHours(date.getUTCHours() - amount);
+      break;
+    case "day":
+    case "days":
+      date.setUTCDate(date.getUTCDate() - amount);
+      break;
+  }
+
+  return Math.floor(date.getTime() / 1000); // return epoch seconds (UTC)
+}
+
 async function calculate_CC_contestRatings(handle) {
   try {
     const { ratingData: Contests } = await fetchContestData(handle);
@@ -60,14 +90,18 @@ async function calculate_CC_stats(handle, username) {
       if (!flag.has(problem.problem)) {
         flag.set(problem.problem, 1);
       } else return false;
-      const normalizedDate = `20${problem.date.substring(
-        15,
-        17
-      )}-${problem.date.substring(12, 14)}-${problem.date.substring(9, 11)}`;
-      stats.solved.set(
-        normalizedDate,
-        stats.solved.get(normalizedDate) + 1 || 1
-      );
+      let epochSeconds = 0;
+      if (problem.date.length < 17) {
+        epochSeconds = parseRelativeToEpochSeconds(problem.date);
+      } else {
+        let dateStr = `20${problem.date.substring(
+          15,
+          17
+        )}-${problem.date.substring(12, 14)}-${problem.date.substring(9, 11)}`;
+        const [year, month, day] = dateStr.split("-").map(Number);
+        epochSeconds = Math.floor(Date.UTC(year, month - 1, day) / 1000);
+      }
+      stats.solved.set(epochSeconds, stats.solved.get(epochSeconds) + 1 || 1);
     });
     for (const [key, value] of flag) {
       stats.problemName.push(key);

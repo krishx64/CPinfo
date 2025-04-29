@@ -124,15 +124,15 @@ export default function Dashboard() {
         let heatmapTemp = new Map();
         resource.stats.solved.forEach((problem) => {
           let dateKey = new Date(problem[0]);
-          if (resource.platform === "Codechef") {
-            dateKey = problem[0];
-          } else {
-            const localDate = new Date(problem[0] * 1000);
-            const year = localDate.getFullYear();
-            const month = String(localDate.getMonth() + 1).padStart(2, "0");
-            const day = String(localDate.getDate()).padStart(2, "0");
-            dateKey = `${year}-${month}-${day}`;
-          }
+          // if (resource.platform === "Codechef") {
+          //   dateKey = problem[0];
+          // } else {
+          const localDate = new Date(problem[0] * 1000);
+          const year = localDate.getFullYear();
+          const month = String(localDate.getMonth() + 1).padStart(2, "0");
+          const day = String(localDate.getDate()).padStart(2, "0");
+          dateKey = `${year}-${month}-${day}`;
+          // }
           if (!heatmapTemp.has(dateKey)) {
             heatmapTemp.set(dateKey, 0);
           }
