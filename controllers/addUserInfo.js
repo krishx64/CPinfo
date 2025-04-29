@@ -66,13 +66,7 @@ async function addToDB(handleName, username, errorLog) {
     throw error; // Re-throw the error to be handled by the caller
   }
   try {
-    for (const platform of Object.keys(handleName)) {
-      await redisClient.del(`${username}_${platform}`);
-    }
-    const response = await User.findOne({ username: username }).select(
-      "-password"
-    );
-    await redisClient.setEx(username, 600, JSON.stringify(response));
+    await redisClient.del(`${username}_fetch`);
   } catch (error) {
     console.error("Error in redis:", error);
     throw error;

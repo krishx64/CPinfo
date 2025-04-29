@@ -37,9 +37,9 @@ app.get("/api/resources/:username", async (req, res) => {
     const response = await User.findOne({ username: username }).select(
       "-password"
     );
-    await redisClient.setEx(username, 600, JSON.stringify(response));
     if (!response)
       return res.status(404).json({ message: "User does not exist" });
+    await redisClient.setEx(username, 600, JSON.stringify(response));
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -57,23 +57,11 @@ app.post("/api/fetch", authenticateToken, async (req, res) => {
     const username = req.user.username;
     const handleName = req.body;
 
-    // Check if fetching is already in progress for any platform
-    for (const platform of Object.keys(handleName)) {
-      const state = await redisClient.get(`${username}_${platform}`);
-      if (state) {
-        return res.status(425).json({ message: "Fetching in progress" });
-      }
+    const state = await redisClient.get(`${username}_fetch`);
+    if (state) {
+      return res.status(425).json({ message: "Fetching in progress" });
     }
-
-    // Set fetching state for all platforms
-    for (const platform of Object.keys(handleName)) {
-      await redisClient.setEx(
-        `${username}_${platform}`,
-        DEFAULT_EXPIRATION,
-        "true"
-      );
-      const value = await redisClient.get(`${username}_${platform}`);
-    }
+    await redisClient.setEx(`${username}_fetch`, DEFAULT_EXPIRATION, "true");
     errorLog.errorArray = [];
     addToDB(handleName, username, errorLog);
     res.status(200).json({ message: "Data received successfully" });
@@ -164,7 +152,6 @@ function authenticateToken(req, res, next) {
   if (token == null) return res.sendStatus(401);
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    console.log(err);
     if (err) return res.sendStatus(403);
     req.user = user;
     next();

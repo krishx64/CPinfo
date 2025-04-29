@@ -1,4 +1,5 @@
 const User = require("../models/user"); // your User model
+const redisClient = require("../db/redis.js");
 
 async function addInfo(
   username,
@@ -38,7 +39,7 @@ async function addInfo(
       }
 
       try {
-        stats = await statsfn(handle);
+        stats = await statsfn(handle, username);
       } catch (error) {
         errorLog.errorArray.push(`Failed to fetch stats for ${platform}`);
         console.error("Error in statsfn:", error);
@@ -80,6 +81,15 @@ async function addInfo(
       `There was an error with ${platform}, some info are not updated`
     );
     console.error("Error in addInfo:", error);
+  }
+  try {
+    const response = await User.findOne({ username: username }).select(
+      "-password"
+    );
+    await redisClient.setEx(username, 600, JSON.stringify(response));
+  } catch (error) {
+    console.error("Error in redis:", error);
+    throw error;
   }
 }
 module.exports = { addInfo };
