@@ -58,6 +58,7 @@ async function calculate_CF_Accepted(handle) {
 async function calculate_CF_stats(handle) {
   try {
     let { result: verdicts } = await fetchProblemData(handle);
+    const totalSubmissions = verdicts.length;
     verdicts = verdicts.filter((problem) => problem.verdict === "OK");
     let stats = {
       solved: new Map(),
@@ -105,7 +106,7 @@ async function calculate_CF_stats(handle) {
     stats.tags = Array.from(stats.tags);
     stats.rating = Array.from(stats.rating);
     stats.difficulty = Array.from(stats.difficulty);
-    return stats;
+    return { stats, totalSubmissions };
   } catch (error) {
     console.log(error);
     throw new Error(error);
@@ -114,14 +115,18 @@ async function calculate_CF_stats(handle) {
 async function calculate_CF_contestRatings(handle) {
   try {
     const { result: Contests } = await fetchContestData(handle);
+    let maxRating = 0,
+      currentRating = 0;
     let contestRatings = [];
     for (let i = 0; i < Contests.length; i++) {
       contestRatings.push([
         new Date(Contests[i].ratingUpdateTimeSeconds * 1000),
         parseInt(Contests[i].newRating),
       ]);
+      currentRating = Contests[i].newRating;
+      if (currentRating > maxRating) maxRating = currentRating;
     }
-    return contestRatings;
+    return { contestRatings, maxRating, currentRating };
   } catch (error) {
     console.log(error);
     throw new Error(error);

@@ -38,15 +38,19 @@ function parseRelativeToEpochSeconds(text) {
 async function calculate_CC_contestRatings(handle) {
   try {
     const { ratingData: Contests } = await fetchContestData(handle);
+    let maxRating = 0,
+      currentRating = 0;
     let contestRatings = [];
     for (let i = 0; i < Contests.length; i++) {
       let someDate = new Date(Contests[i].end_date);
       someDate = someDate.getTime();
       let temp = [new Date(someDate)];
       temp.push(parseInt(Contests[i].rating));
+      currentRating = Contests[i].rating;
+      if (currentRating > maxRating) maxRating = currentRating;
       contestRatings.push(temp);
     }
-    return contestRatings;
+    return { contestRatings, maxRating, currentRating };
   } catch (error) {
     console.log(error);
     throw new Error(error);
@@ -74,8 +78,11 @@ async function calculate_CC_stats(handle, username) {
     if (userStats && userStats.handle === handle) {
       ({ pagesUpdated: pages, problemName: problemUpdated } = userStats.stats);
     }
-    ({ allSubmissions: verdicts, trueMaxPage: pagesUpdated } =
-      await fetchSolvedProblems(handle, pages));
+    ({
+      allSubmissions: verdicts,
+      trueMaxPage: pagesUpdated,
+      totalSubmissions,
+    } = await fetchSolvedProblems(handle, pages));
     let stats = {
       solved: new Map(),
       pagesUpdated: pagesUpdated,
@@ -109,7 +116,7 @@ async function calculate_CC_stats(handle, username) {
     stats.solved = Array.from(stats.solved);
     if (userStats && userStats.handle)
       stats.solved.push(...userStats.stats.solved);
-    return stats;
+    return { stats, totalSubmissions };
   } catch (error) {
     console.error("Error: ", error);
     throw new Error(error);

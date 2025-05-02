@@ -6,15 +6,19 @@ const {
 async function calculate_AC_contestRatings(handle) {
   try {
     const Contests = await fetchContestData(handle);
+    let currentRating = 0,
+      maxRating = 0;
     let contestRatings = [];
     for (let i = 0; i < Contests.length; i++) {
       let someDate = new Date(Contests[i].EndTime);
       someDate = someDate.getTime();
       let temp = [new Date(someDate)];
       temp.push(parseInt(Contests[i].NewRating));
+      currentRating = Contests[i].NewRating;
+      if (currentRating > maxRating) maxRating = currentRating;
       contestRatings.push(temp);
     }
-    return contestRatings;
+    return { contestRatings, maxRating, currentRating };
   } catch (error) {
     console.error("Error: ", error);
     throw new Error(error);
@@ -39,6 +43,7 @@ async function calculate_AC_stats(handle) {
       tempVerdict = await fetchProblemData(handle, time);
       tempVerdict.forEach((problem) => verdicts.push(problem));
     }
+    const totalSubmissions = verdicts.length;
     verdicts = verdicts.filter((problem) => problem.result === "AC");
     let stats = {
       solved: new Map(),
@@ -60,7 +65,7 @@ async function calculate_AC_stats(handle) {
     });
     stats.solved = Array.from(stats.solved);
     stats.difficulty = Array.from(stats.difficulty);
-    return stats;
+    return { stats, totalSubmissions };
   } catch (error) {
     console.error("Error: ", error);
     throw new Error(error);

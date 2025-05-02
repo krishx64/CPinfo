@@ -12,6 +12,95 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./login.css";
 import BASE_URL from "./config";
 
+function calculateLeague(platform, rating) {
+  switch (platform) {
+    case "Codeforces": {
+      if (rating <= 1199) return "Newbie";
+      if (rating <= 1399) return "Pupil";
+      if (rating <= 1599) return "Specialist";
+      if (rating <= 1899) return "Expert";
+      if (rating <= 2099) return "Candidate Master";
+      if (rating <= 2299) return "Master";
+      if (rating <= 2399) return "International Master";
+      if (rating <= 2599) return "Grandmaster";
+      if (rating <= 2899) return "International Grandmaster";
+      return "Legendary Grandmaster";
+    }
+    case "Codechef": {
+      if (rating < 1400) return "1 Star";
+      if (rating < 1600) return "2 Star";
+      if (rating < 1800) return "3 Star";
+      if (rating < 2000) return "4 Star";
+      if (rating < 2200) return "5 Star";
+      if (rating < 2500) return "6 Star";
+      return "7 Star";
+    }
+    case "Atcoder": {
+      if (rating < 400) return "Gray";
+      if (rating < 800) return "Brown";
+      if (rating < 1200) return "Green";
+      if (rating < 1600) return "Cyan";
+      if (rating < 2000) return "Blue";
+      if (rating < 2400) return "Yellow";
+      if (rating < 2800) return "Orange";
+      return "Red";
+    }
+    // case "Leetcode": {
+    //   if (rating < 1400) return "Bronze";
+    //   if (rating < 1600) return "Silver";
+    //   if (rating < 1800) return "Gold";
+    //   if (rating < 2000) return "Platinum";
+    //   if (rating < 2200) return "Diamond";
+    //   return "Challenger";
+    // }
+    default:
+      return "Unranked";
+  }
+}
+function calculateStreaks(heatmapData) {
+  if (heatmapData.length <= 1) {
+    // No data or only column definitions
+    return { maxStreak: 0, currentStreak: 0 };
+  }
+
+  // Extract only the dates from heatmapData (skip the first row if it's column definitions)
+  const dates = heatmapData.slice(1).map((entry) => new Date(entry[0]));
+
+  // Sort dates in ascending order
+  dates.sort((a, b) => a - b);
+
+  let maxStreak = 0;
+  let currentStreak = 1; // Start with 1 since the first day is always part of a streak
+  for (let i = 1; i < dates.length; i++) {
+    const prevDate = dates[i - 1];
+    const currentDate = dates[i];
+
+    // Check if the current date is consecutive to the previous date
+    const diffInDays = (currentDate - prevDate) / (1000 * 60 * 60 * 24); // Difference in days
+    if (diffInDays <= 1) {
+      currentStreak++;
+    } else {
+      // Update max streak if the current streak ends
+      maxStreak = Math.max(maxStreak, currentStreak);
+      currentStreak = 1; // Reset current streak
+    }
+  }
+
+  // Final check for the last streak
+  maxStreak = Math.max(maxStreak, currentStreak);
+
+  // Calculate current streak (from the last active day to today)
+  const today = new Date();
+  const lastActiveDate = dates[dates.length - 1];
+  const diffFromToday = (today - lastActiveDate) / (1000 * 60 * 60 * 24);
+  if (diffFromToday < 1) {
+    // If the last active day is today, the current streak continues
+    return { maxStreak, currentStreak };
+  } else {
+    // Otherwise, the current streak ends
+    return { maxStreak, currentStreak: 0 };
+  }
+}
 export default function Dashboard() {
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
@@ -32,7 +121,12 @@ export default function Dashboard() {
   const [selectedView, setSelectedView] = useState("all");
   const [activeButton, setActiveButton] = useState("all");
   const [resources, setResources] = useState([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(false);
+  const [maxStreak, setMaxStreak] = useState(0);
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [totalSolved, setTotalSolved] = useState(0);
+  const [totalSubmissions, setTotalSubmissions] = useState(1);
+  const [ratings, setRatings] = useState([]);
 
   useEffect(() => {
     const fetchResources = () => {
@@ -104,8 +198,22 @@ export default function Dashboard() {
     let newTags = [];
     let newSolvedRatings = [["Rating", "Solved"]];
     let newDifficultyRatings = [["Difficulty", "Solved"]];
+    let heatmapTemp = new Map();
+    let newTotalSolved = 0;
+    let newTotalSubmissions = 0;
+    let newRatings = [];
     resources.forEach((resource) => {
+      if (resource.maxRating) {
+        newRatings.push({
+          platform: resource.platform,
+          maxRating: resource.maxRating,
+          currentRating: resource.currentRating,
+          league: resource.stats.league,
+        });
+      }
       newHandle = resource.handle;
+      newTotalSolved += resource.solved;
+      newTotalSubmissions += resource.totalSubmissions;
       const Contests = resource.ratings;
       if (Contests.length === 0) return false;
       for (let i = 1; i < newContestRatings.length; i++) {
@@ -121,18 +229,13 @@ export default function Dashboard() {
         newContestRatings.push(temp);
       }
       if (resource.stats !== undefined) {
-        let heatmapTemp = new Map();
         resource.stats.solved.forEach((problem) => {
           let dateKey = new Date(problem[0]);
-          // if (resource.platform === "Codechef") {
-          //   dateKey = problem[0];
-          // } else {
           const localDate = new Date(problem[0] * 1000);
           const year = localDate.getFullYear();
           const month = String(localDate.getMonth() + 1).padStart(2, "0");
           const day = String(localDate.getDate()).padStart(2, "0");
           dateKey = `${year}-${month}-${day}`;
-          // }
           if (!heatmapTemp.has(dateKey)) {
             heatmapTemp.set(dateKey, 0);
           }
@@ -141,9 +244,6 @@ export default function Dashboard() {
             heatmapTemp.get(dateKey) + parseInt(problem[1])
           );
         });
-        for (const [key, value] of heatmapTemp.entries()) {
-          newHeatmapData.push([new Date(key), parseInt(value)]);
-        }
         newTags.push(["Tags", "Solved"]);
         if (resource.stats.tags !== undefined) {
           resource.stats.tags.forEach((tag) => {
@@ -162,8 +262,14 @@ export default function Dashboard() {
         }
       }
     });
+    for (const [key, value] of heatmapTemp.entries()) {
+      newHeatmapData.push([new Date(key), parseInt(value)]);
+    }
     unstable_batchedUpdates(() => {
+      setRatings(newRatings);
       setHandle(newHandle);
+      setTotalSolved(newTotalSolved);
+      setTotalSubmissions(newTotalSubmissions);
       setSolvedRatings(newSolvedRatings);
       setDifficultyRatings(newDifficultyRatings);
       setTags(newTags);
@@ -171,6 +277,13 @@ export default function Dashboard() {
       setContestRatings(newContestRatings);
     });
   }, [resources]);
+  useEffect(() => {
+    if (heatmapData.length > 1) {
+      const { maxStreak, currentStreak } = calculateStreaks(heatmapData);
+      setMaxStreak(maxStreak);
+      setCurrentStreak(currentStreak);
+    }
+  }, [heatmapData]);
   const handleButtonClick = (view) => {
     setSelectedView(view);
     switch (view) {
@@ -224,17 +337,72 @@ export default function Dashboard() {
       );
     switch (selectedView) {
       case "all":
-        // let solvedPlatforms = [["Platform", "Solved"]];
-        // solvedPlatforms.push(...Array.from(solvedProblems));
+        let solvedPlatforms = [["Platform", "Solved"]];
+        solvedPlatforms.push(...Array.from(solvedProblems));
         return (
           <div>
-            {/* <div className="other-info-container">
+            <div className="other-info-container">
               <BarChart data={solvedPlatforms} />
               <div className="column-container">
-                <div className="row-card-container"></div>
-                <div className="row-card-container"></div>
+                <div className="row-card-container">
+                  {ratings.map((platform, index) => (
+                    <div key={index}>
+                      <div className="stat-name">{platform.platform}</div>
+                      <div className="stat-value">
+                        {parseInt(platform.currentRating)}
+                      </div>
+                      <div className="stat-value-small">
+                        (max : {parseInt(platform.maxRating)})
+                      </div>
+                      <div className="stat-value-league">
+                        {platform.platform === "Leetcode"
+                          ? platform.league
+                          : calculateLeague(
+                              platform.platform,
+                              platform.currentRating
+                            )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="row-card-container">
+                  <div>
+                    <div className="stat-name">Solved</div>
+                    <div className="stat-value">{sum}</div>
+                  </div>
+                  {"|"}
+                  <div>
+                    <div className="stat-name">Active Days</div>
+                    <div className="stat-value">{heatmapData.length - 1}</div>
+                  </div>
+                  {"|"}
+                  <div>
+                    <div className="stat-name">Contests Given</div>
+                    <div className="stat-value">
+                      {contestRatings.length - 1}
+                    </div>
+                  </div>
+                  {"|"}
+                  <div>
+                    <div className="stat-name">Max Streak</div>
+                    <div className="stat-value">{maxStreak}</div>
+                  </div>
+                  {"|"}
+                  <div>
+                    <div className="stat-name">Current Streak</div>
+                    <div className="stat-value">{currentStreak}</div>
+                  </div>
+                  {"|"}
+                  <div>
+                    <div className="stat-name">Success Rate</div>
+                    <div className="stat-value">
+                      {((totalSolved / totalSubmissions || 1) * 100).toFixed(1)}
+                      %
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div> */}
+            </div>
             <LineChart data={contestRatings} />
             <Heatmap data={heatmapData} />
           </div>
@@ -287,19 +455,18 @@ export default function Dashboard() {
         return null;
     }
   };
-  if (data.username === undefined)
-    return (
-      <div className="login-container">
-        <h1>Loading...</h1>
-      </div>
-    );
   if (error) {
     return (
       <div className="login-container">
         <h1>Error</h1>
       </div>
     );
-  }
+  } else if (data.username === undefined)
+    return (
+      <div className="login-container">
+        <h1>Loading...</h1>
+      </div>
+    );
   return (
     <div id="info-container">
       <h1>{fullName}</h1>
@@ -385,6 +552,44 @@ export default function Dashboard() {
             ? `Leetcode: ${solvedProblems.get("leetcode")}`
             : "Leetcode"}
         </button>
+        {/* <div className="other-info-container">
+          <div className="column-container">
+            <div className="row-card-container"></div>
+            <div className="row-card-container">
+              <div>
+                <div className="stat-name">Solved</div>
+                <div className="stat-value">{totalSolved}</div>
+              </div>
+              {"|"}
+              <div>
+                <div className="stat-name">Active Days</div>
+                <div className="stat-value">{heatmapData.length - 1}</div>
+              </div>
+              {"|"}
+              <div>
+                <div className="stat-name">Contests Given</div>
+                <div className="stat-value">{contestRatings.length - 1}</div>
+              </div>
+              {"|"}
+              <div>
+                <div className="stat-name">Max Streak</div>
+                <div className="stat-value">{maxStreak}</div>
+              </div>
+              {"|"}
+              <div>
+                <div className="stat-name">Current Streak</div>
+                <div className="stat-value">{currentStreak}</div>
+              </div>
+              {"|"}
+              <div>
+                <div className="stat-name">Success Rate</div>
+                <div className="stat-value">
+                  {((totalSolved / totalSubmissions || 1) * 100).toFixed(1)}%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> */}
         {renderView()}
       </div>
     </div>

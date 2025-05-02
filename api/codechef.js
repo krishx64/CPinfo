@@ -79,6 +79,7 @@ async function fetchSolvedProblems(handle, minPage) {
   let page = 0;
   let maxPage = null;
   let trueMaxPage = 0;
+  let totalSubmissions = 0;
   while (true) {
     const { submissions, maxPage: pageMax } = await fetchSubmissions(
       username,
@@ -86,6 +87,8 @@ async function fetchSolvedProblems(handle, minPage) {
     );
     if (page === 0 && pageMax !== null) {
       trueMaxPage = pageMax - 1;
+      const { submissions } = await fetchSubmissions(username, trueMaxPage);
+      totalSubmissions = trueMaxPage * 12 + submissions.length;
       maxPage = pageMax - 1 - minPage;
       console.log(` Max page detected: ${maxPage}`);
     }
@@ -102,6 +105,6 @@ async function fetchSolvedProblems(handle, minPage) {
     await sleep(6000);
   }
   console.log(` Total submissions fetched: ${allSubmissions.length}`);
-  return { allSubmissions, trueMaxPage };
+  return { allSubmissions, trueMaxPage, totalSubmissions };
 }
 module.exports = { fetchContestData, fetchSolvedCount, fetchSolvedProblems };

@@ -19,8 +19,11 @@ async function addInfo(
       );
     } else {
       let solved = [];
-      let rating = [];
+      let contestRatings = [];
+      let maxRating = 0;
+      let currentRating = 0;
       let stats = {};
+      let totalSubmissions = 0;
 
       try {
         solved = await solvedfn(handle);
@@ -32,14 +35,14 @@ async function addInfo(
       }
 
       try {
-        rating = await ratingfn(handle);
+        ({ contestRatings, maxRating, currentRating } = await ratingfn(handle));
       } catch (error) {
         errorLog.errorArray.push(`Failed to fetch ratings for ${platform}`);
         console.error("Error in ratingfn:", error);
       }
 
       try {
-        stats = await statsfn(handle, username);
+        ({ stats, totalSubmissions } = await statsfn(handle, username));
       } catch (error) {
         errorLog.errorArray.push(`Failed to fetch stats for ${platform}`);
         console.error("Error in statsfn:", error);
@@ -52,7 +55,10 @@ async function addInfo(
           $set: {
             "userStats.$.handle": handle,
             "userStats.$.solved": solved,
-            "userStats.$.ratings": rating,
+            "userStats.$.totalSubmissions": totalSubmissions,
+            "userStats.$.ratings": contestRatings,
+            "userStats.$.maxRating": maxRating,
+            "userStats.$.currentRating": currentRating,
             "userStats.$.stats": stats,
           },
         }
@@ -68,7 +74,10 @@ async function addInfo(
                 platform,
                 handle,
                 solved,
-                ratings: rating,
+                totalSubmissions,
+                ratings: contestRatings,
+                maxRating,
+                currentRating,
                 stats,
               },
             },

@@ -65,9 +65,21 @@ const userSchema = new mongoose.Schema(
             type: Number,
             default: 0,
           },
+          totalSubmissions: {
+            type: Number,
+            default: 0,
+          },
           ratings: {
             type: [[mongoose.Schema.Types.Mixed]], // Nested array
             default: [],
+          },
+          maxRating: {
+            type: Number,
+            default: 0,
+          },
+          currentRating: {
+            type: Number,
+            default: 0,
           },
           stats: {
             type: mongoose.Schema.Types.Mixed,
