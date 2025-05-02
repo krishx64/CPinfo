@@ -16,13 +16,12 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 
 const DEFAULT_EXPIRATION = 3600;
-//comment this for prod
-// app.use(
-//   cors({
-//     origin: "http://localhost:3001", // Your frontend URL
-//     credentials: true,
-//   })
-// );
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "http://localhost:3001", // Use environment variable for production
+  credentials: true, // Allow cookies to be sent
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "build")));
 app.use(express.json());
