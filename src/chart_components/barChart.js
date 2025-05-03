@@ -29,19 +29,19 @@ export default function BarChart({ data }) {
       },
     },
     legend: "none",
-    // legend: {
-    //   position: "right",
-    //   textStyle: {
-    //     color: "#FFFFFF", // Change legend text color
-    //     fontSize: 14, // Optional: Adjust font size
-    //   },
-    // },
     titleTextStyle: {
       color: "#FFFFFF", // Title text color
       fontSize: 18,
       bold: true,
     },
   };
+  if (data.length === 1) {
+    return (
+      <div className="bar-chart-container chart-container">
+        <h1>NO DATA FOUND</h1>
+      </div>
+    );
+  }
   return (
     <div className="bar-chart-container chart-container">
       <Chart

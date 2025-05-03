@@ -215,11 +215,12 @@ export default function Dashboard() {
       newTotalSolved += resource.solved;
       newTotalSubmissions += resource.totalSubmissions;
       const Contests = resource.ratings;
-      if (Contests.length === 0) return false;
-      for (let i = 1; i < newContestRatings.length; i++) {
-        newContestRatings[i].push(null);
+      if (Contests.length !== 0) {
+        for (let i = 1; i < newContestRatings.length; i++) {
+          newContestRatings[i].push(null);
+        }
+        newContestRatings[0].push(resource.platform);
       }
-      newContestRatings[0].push(resource.platform);
       for (let i = 0; i < Contests.length; i++) {
         let temp = [new Date(Contests[i][0])];
         for (let j = 1; j <= newContestRatings[0].length - 2; j++) {
@@ -256,9 +257,15 @@ export default function Dashboard() {
           });
         }
         if (resource.stats.difficulty !== undefined) {
-          resource.stats.difficulty.forEach((index) => {
-            newDifficultyRatings.push([index[0], parseInt(index[1])]);
-          });
+          if (resource.platform === "Leetcode") {
+            resource.stats.difficulty.slice(1).forEach((index) => {
+              newTags.push([index[0], parseInt(index[1])]);
+            });
+          } else {
+            resource.stats.difficulty.forEach((index) => {
+              newDifficultyRatings.push([index[0], parseInt(index[1])]);
+            });
+          }
         }
       }
     });
@@ -413,13 +420,11 @@ export default function Dashboard() {
             <h3>Handle: {handle}</h3>
             <LineChart data={contestRatings} />
             <PieChart data={tags} />
-            {/* <div className="column-container"> */}
             <ColumnChart data={solvedRatings} title="Solved problem ratings" />
             <ColumnChart
               data={difficultyRatings}
               title="Solved problem difficulty"
             />
-            {/* </div> */}
             <Heatmap data={heatmapData} />
           </div>
         );
@@ -448,6 +453,7 @@ export default function Dashboard() {
           <div>
             <h3>Handle: {handle}</h3>
             <LineChart data={contestRatings} />
+            <PieChart data={tags} />
             <Heatmap data={heatmapData} />
           </div>
         );

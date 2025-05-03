@@ -28,6 +28,13 @@ export default function PieChart({ data }) {
     },
     pieSliceText: "none",
   };
+  if (data.length === 1) {
+    return (
+      <div className="pie-chart-container chart-container">
+        <h1>NO DATA FOUND</h1>
+      </div>
+    );
+  }
   return (
     <div className="pie-chart-container chart-container">
       <Chart

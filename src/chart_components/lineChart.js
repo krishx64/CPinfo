@@ -48,6 +48,13 @@ export default function LineChart({ data }) {
       bold: true,
     },
   };
+  if (data.length === 1) {
+    return (
+      <div className="line-chart-container chart-container">
+        <h1>NO CONTEST DATA FOUND</h1>
+      </div>
+    );
+  }
   return (
     <div className="line-chart-container chart-container">
       <Chart

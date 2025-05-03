@@ -59,6 +59,13 @@ export default function ColumnChart({ data, title }) {
       bold: true,
     },
   };
+  if (data.length === 1) {
+    return (
+      <div className="column-chart-container chart-container">
+        <h1>NO PROBLEM DATA FOUND</h1>
+      </div>
+    );
+  }
   return (
     <div className="column-chart-container chart-container">
       <Chart

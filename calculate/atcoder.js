@@ -50,6 +50,7 @@ async function calculate_AC_stats(handle) {
       difficulty: new Map(),
     };
     let flag = new Map();
+    let totalSolved = 0;
     verdicts.forEach((problem) => {
       if (flag[problem.problem_id] === undefined) {
         flag[problem.problem_id] = 1;
@@ -58,6 +59,7 @@ async function calculate_AC_stats(handle) {
         problem.epoch_second,
         stats.solved.get(problem.epoch_second) + 1 || 1
       );
+      totalSolved++;
       const index =
         problem.problem_id[problem.problem_id.length - 1].toUpperCase();
       if ((index >= "A" && index <= "Z") || (index >= "a" && index <= "z"))
@@ -65,7 +67,7 @@ async function calculate_AC_stats(handle) {
     });
     stats.solved = Array.from(stats.solved);
     stats.difficulty = Array.from(stats.difficulty);
-    return { stats, totalSubmissions };
+    return { stats, totalSubmissions, totalSolved };
   } catch (error) {
     console.error("Error: ", error);
     throw new Error(error);

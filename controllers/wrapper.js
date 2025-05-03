@@ -18,7 +18,7 @@ async function addInfo(
         { $pull: { userStats: { platform } } }
       );
     } else {
-      let solved = [];
+      let solved = 0;
       let contestRatings = [];
       let maxRating = 0;
       let currentRating = 0;
@@ -42,7 +42,11 @@ async function addInfo(
       }
 
       try {
-        ({ stats, totalSubmissions } = await statsfn(handle, username));
+        ({ stats, totalSubmissions, totalSolved } = await statsfn(
+          handle,
+          username
+        ));
+        if (totalSolved) solved = totalSolved;
       } catch (error) {
         errorLog.errorArray.push(`Failed to fetch stats for ${platform}`);
         console.error("Error in statsfn:", error);

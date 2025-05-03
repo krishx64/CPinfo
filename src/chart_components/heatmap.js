@@ -42,6 +42,13 @@ export default function Heatmap({ data }) {
       isHtml: true,
     },
   };
+  if (data.length === 1) {
+    return (
+      <div className="heatmap-chart-container chart-container">
+        <h1>NO PROBLEM DATA FOUND</h1>
+      </div>
+    );
+  }
   return (
     <div className="heatmap-container">
       <Chart
