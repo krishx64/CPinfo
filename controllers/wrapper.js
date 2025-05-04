@@ -26,7 +26,7 @@ async function addInfo(
       let totalSubmissions = 0;
 
       try {
-        solved = await solvedfn(handle);
+        solved = (await solvedfn(handle)) || 0;
       } catch (error) {
         errorLog.errorArray.push(
           `Failed to fetch solved problems for ${platform}`

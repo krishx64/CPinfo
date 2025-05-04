@@ -18,10 +18,12 @@ const {
   calculate_CC_contestRatings,
   calculate_CC_stats,
 } = require("../calculate/codechef.js");
+const { calculate_HR_stats } = require("../calculate/hackerrank.js");
 const { addInfo } = require("./wrapper.js");
 const User = require("../models/user");
 const redisClient = require("../db/redis.js");
 
+const emptyFunction = () => {};
 async function addToDB(handleName, username, errorLog) {
   try {
     errorArray = [];
@@ -51,6 +53,15 @@ async function addToDB(handleName, username, errorLog) {
       handleName.lc,
       errorLog,
       calculate_LC_stats
+    );
+    await addInfo(
+      username,
+      emptyFunction,
+      emptyFunction,
+      "Hackerrank",
+      handleName.hr,
+      errorLog,
+      calculate_HR_stats
     );
     await addInfo(
       username,

@@ -12,6 +12,7 @@ export default function Settings() {
     cc: "",
     ac: "",
     lc: "",
+    hr: "",
   });
   const [loading, setLoading] = useState(true);
   const { accessToken, username, setAccessToken, setUsername } = useAuth();
@@ -48,6 +49,9 @@ export default function Settings() {
       }
       if (resource.platform === "Leetcode") {
         newHandleName.lc = resource.handle;
+      }
+      if (resource.platform === "Hackerrank") {
+        newHandleName.hr = resource.handle;
       }
     });
     setHandleName(newHandleName);
@@ -179,6 +183,17 @@ export default function Settings() {
             type="text"
             name="cc"
             value={handleName.cc}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <div className="input-text">HackerRank handle</div>
+          <input
+            placeholder="Enter HackerRank handle"
+            className="input-field handle-field"
+            type="text"
+            name="hr"
+            value={handleName.hr}
             onChange={handleChange}
           />
         </div>

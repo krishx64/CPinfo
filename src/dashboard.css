@@ -124,6 +124,13 @@ h3{
   height: 200px;
   width: 100%;
 }
+.platform-row-card-container{
+  height: 150px;
+}
+.rating-row-card-container{
+  height: 150px;
+  width: 400px;
+}
 .row-card-container div{
   background-color: #22252c;
   display: flex;
@@ -147,6 +154,11 @@ h3{
   flex-direction: column;
   background-color: #00000000;
 }
+/* .paltform-column-container{
+  display: flex;
+  flex-direction: column;
+  background-color: #00000000;
+} */
 .stat-name{
   font-size: 18px;
   font-weight: bold;

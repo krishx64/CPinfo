@@ -1,4 +1,3 @@
-const e = require("express");
 const { fetchProblemData, fetchContestData } = require("../api/codeforces");
 const { isNumber } = require("chart.js/helpers");
 function calculate_CF_verdicts(Submissions) {

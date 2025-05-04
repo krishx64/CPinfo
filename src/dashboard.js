@@ -291,6 +291,65 @@ export default function Dashboard() {
       setCurrentStreak(currentStreak);
     }
   }, [heatmapData]);
+
+  const stat_component = () => {
+    return (
+      <div className="other-info-container">
+        <div className="row-card-container rating-row-card-container">
+          {ratings.map((platform, index) => (
+            <div key={index}>
+              <div className="stat-name">{platform.platform}</div>
+              <div className="stat-value">
+                {parseInt(platform.currentRating)}
+              </div>
+              <div className="stat-value-small">
+                (max : {parseInt(platform.maxRating)})
+              </div>
+              <div className="stat-value-league">
+                {platform.platform === "Leetcode"
+                  ? platform.league
+                  : calculateLeague(platform.platform, platform.currentRating)}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="row-card-container platform-row-card-container">
+          <div>
+            <div className="stat-name">Solved</div>
+            <div className="stat-value">{totalSolved}</div>
+          </div>
+          {"|"}
+          <div>
+            <div className="stat-name">Active Days</div>
+            <div className="stat-value">{heatmapData.length - 1}</div>
+          </div>
+          {"|"}
+          <div>
+            <div className="stat-name">Contests Given</div>
+            <div className="stat-value">{contestRatings.length - 1}</div>
+          </div>
+          {"|"}
+          <div>
+            <div className="stat-name">Max Streak</div>
+            <div className="stat-value">{maxStreak}</div>
+          </div>
+          {"|"}
+          <div>
+            <div className="stat-name">Current Streak</div>
+            <div className="stat-value">{currentStreak}</div>
+          </div>
+          {"|"}
+          <div>
+            <div className="stat-name">Success Rate</div>
+            <div className="stat-value">
+              {((totalSolved / totalSubmissions || 1) * 100).toFixed(1)}%
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const handleButtonClick = (view) => {
     setSelectedView(view);
     switch (view) {
@@ -326,12 +385,20 @@ export default function Dashboard() {
         setResources(leetcodeData);
         setActiveButton("leetcode");
         break;
+      case "hackerrank":
+        const hackerrankData = [
+          data.userStats.find((resource) => resource.platform === "Hackerrank"),
+        ];
+        setResources(hackerrankData);
+        setActiveButton("hackerrank");
+        break;
       default:
         setResources(data.userStats);
         setActiveButton("all");
         break;
     }
   };
+
   const renderView = () => {
     if (data.userStats.length === 0)
       return (
@@ -418,6 +485,7 @@ export default function Dashboard() {
         return (
           <div info-container>
             <h3>Handle: {handle}</h3>
+            {stat_component()}
             <LineChart data={contestRatings} />
             <PieChart data={tags} />
             <ColumnChart data={solvedRatings} title="Solved problem ratings" />
@@ -432,6 +500,7 @@ export default function Dashboard() {
         return (
           <div>
             <h3>Handle: {handle}</h3>
+            {stat_component()}
             <LineChart data={contestRatings} />
             <Heatmap data={heatmapData} />
           </div>
@@ -440,6 +509,7 @@ export default function Dashboard() {
         return (
           <div>
             <h3>Handle: {handle}</h3>
+            {stat_component()}
             <LineChart data={contestRatings} />
             <ColumnChart
               data={difficultyRatings}
@@ -452,8 +522,18 @@ export default function Dashboard() {
         return (
           <div>
             <h3>Handle: {handle}</h3>
+            {stat_component()}
             <LineChart data={contestRatings} />
             <PieChart data={tags} />
+            <Heatmap data={heatmapData} />
+          </div>
+        );
+      case "hackerrank":
+        return (
+          <div>
+            <h3>Handle: {handle}</h3>
+            {stat_component()}
+            <LineChart data={contestRatings} />
             <Heatmap data={heatmapData} />
           </div>
         );
@@ -558,44 +638,24 @@ export default function Dashboard() {
             ? `Leetcode: ${solvedProblems.get("leetcode")}`
             : "Leetcode"}
         </button>
-        {/* <div className="other-info-container">
-          <div className="column-container">
-            <div className="row-card-container"></div>
-            <div className="row-card-container">
-              <div>
-                <div className="stat-name">Solved</div>
-                <div className="stat-value">{totalSolved}</div>
-              </div>
-              {"|"}
-              <div>
-                <div className="stat-name">Active Days</div>
-                <div className="stat-value">{heatmapData.length - 1}</div>
-              </div>
-              {"|"}
-              <div>
-                <div className="stat-name">Contests Given</div>
-                <div className="stat-value">{contestRatings.length - 1}</div>
-              </div>
-              {"|"}
-              <div>
-                <div className="stat-name">Max Streak</div>
-                <div className="stat-value">{maxStreak}</div>
-              </div>
-              {"|"}
-              <div>
-                <div className="stat-name">Current Streak</div>
-                <div className="stat-value">{currentStreak}</div>
-              </div>
-              {"|"}
-              <div>
-                <div className="stat-name">Success Rate</div>
-                <div className="stat-value">
-                  {((totalSolved / totalSubmissions || 1) * 100).toFixed(1)}%
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
+        <button
+          className={
+            solvedProblems.get("hackerrank") !== undefined
+              ? activeButton === "hackerrank"
+                ? "pressed-button"
+                : "platform-button"
+              : "disabled-button"
+          }
+          onClick={() =>
+            solvedProblems.get("hackerrank") !== undefined
+              ? handleButtonClick("hackerrank")
+              : null
+          }
+        >
+          {solvedProblems.get("hackerrank") !== undefined
+            ? `HackerRank: ${solvedProblems.get("hackerrank")}`
+            : "HackerRank"}
+        </button>
         {renderView()}
       </div>
     </div>
