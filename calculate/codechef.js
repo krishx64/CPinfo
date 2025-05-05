@@ -114,9 +114,13 @@ async function calculate_CC_stats(handle, username) {
       stats.problemName.push(key);
     }
     stats.solved = Array.from(stats.solved);
+    let totalSolved = 0;
+    stats.solved.forEach((solved) => {
+      totalSolved += solved[1];
+    });
     if (userStats && userStats.handle)
       stats.solved.push(...userStats.stats.solved);
-    return { stats, totalSubmissions };
+    return { stats, totalSubmissions, totalSolved };
   } catch (error) {
     console.error("Error: ", error);
     throw new Error(error);
