@@ -68,7 +68,7 @@ app.post("/api/fetch", authenticateToken, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-app.post("/api/signin", async (req, res) => {
+app.post("/api/signup", async (req, res) => {
   try {
     const { email, username } = req.body;
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });

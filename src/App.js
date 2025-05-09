@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import Dashboard from "./dashboard.js";
 import Settings from "./settings.js";
-import Signin from "./signin.js";
+import Signup from "./signup.js";
 import Login from "./login.js";
 import "./App.css";
 import { useAuth } from "./AuthContext";
@@ -28,8 +28,8 @@ function App() {
               </div>
             </a>
             <div className="nav-button-container">
-              <Link className="nav-buttons" to="/signin">
-                Sign-In
+              <Link className="nav-buttons" to="/signup">
+                Sign-Up
               </Link>{" "}
               |
               <Link className="nav-buttons" to="/login">
@@ -38,7 +38,7 @@ function App() {
             </div>
           </nav>
           <Routes>
-            <Route path="/signin" element={<Signin />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/user/:username" element={<Dashboard />} />
             <Route path="*" element={<Navigate to="/login" />} />

@@ -4,7 +4,7 @@ import BASE_URL from "./config";
 import "./login.css";
 import { Toast, displayMsg } from "./toast.js";
 
-export default function Signin() {
+export default function Signup() {
   const [userCredentials, setUserCredentials] = useState({
     firstName: "",
     lastName: "",
@@ -96,13 +96,13 @@ export default function Signin() {
 
     if (Object.keys(newErrors).length === 0) {
       try {
-        const res = await fetch(`${BASE_URL}/api/signin`, {
+        const res = await fetch(`${BASE_URL}/api/signup`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userCredentials),
         });
         if (res.ok) {
-          displayMsg("Sign-In Successful", "success");
+          displayMsg("Sign-Up Successful", "success");
         } else {
           const data = await res.json();
           displayMsg(data.message, "error");
@@ -116,7 +116,7 @@ export default function Signin() {
 
   return (
     <div className="login-container">
-      <h1>Sign-In</h1>
+      <h1>Sign-Up</h1>
       <form className="login-field" onSubmit={handleSubmit}>
         <div>
           <input
@@ -187,7 +187,7 @@ export default function Signin() {
           )}
         </div>
         <button className="authenticate-button" type="submit">
-          Sign-in
+          Sign-Up
         </button>
       </form>
       <Toast />
