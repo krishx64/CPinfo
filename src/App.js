@@ -12,6 +12,7 @@ import Login from "./login.js";
 import "./App.css";
 import { useAuth } from "./AuthContext";
 import icon from "./icon.png";
+import Search from "./search.js";
 
 function App() {
   const { accessToken, username } = useAuth();
@@ -28,6 +29,7 @@ function App() {
               </div>
             </a>
             <div className="nav-button-container">
+              <Search />
               <Link className="nav-buttons" to="/signup">
                 Sign-Up
               </Link>{" "}
@@ -55,8 +57,9 @@ function App() {
               </div>
             </a>
             <div className="nav-button-container">
+              <Search />
               <Link className="nav-buttons" to={`/`}>
-                Dashboard
+                {username}
               </Link>{" "}
               |{" "}
               <Link className="nav-buttons" to={`/settings`}>

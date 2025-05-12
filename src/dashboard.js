@@ -158,7 +158,7 @@ export default function Dashboard() {
 
     // // Cleanup the interval when the component unmounts
     // return () => clearInterval(intervalId);
-  }, []);
+  }, [username]);
   useEffect(() => {
     let newSolvedProblems = new Map();
     let newSum = 0;
@@ -186,6 +186,7 @@ export default function Dashboard() {
       setSum(newSum);
     });
   }, [data]);
+  console.log(data);
   useEffect(() => {
     let newContestRatings = [["Time"]];
     let newHandle = "";
@@ -208,7 +209,7 @@ export default function Dashboard() {
           platform: resource.platform,
           maxRating: resource.maxRating,
           currentRating: resource.currentRating,
-          league: resource.stats.league,
+          league: resource.stats.league || "Unranked",
         });
       }
       newHandle = resource.handle;

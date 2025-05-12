@@ -1,0 +1,34 @@
+.search-box{
+    width: 200px;
+    height: 23px;
+    border-style: solid;
+    border-color: rgb(156, 146, 146);
+    border-radius: 5px;
+    border-width: 1px;
+    padding: 3px;
+}
+.search-results{
+    position: absolute;
+    width: 206px;
+}
+.users{
+    background-color:rgb(0, 0, 0) ;
+    padding: 15px 10px;
+    display: flex;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+}
+.users div{
+    background: none;
+}
+.users:hover{
+    background-color: grey;
+    cursor: pointer;
+}
+.username{
+    background: none;
+    display:block;
+    font-size: 13px;
+    color: rgb(215, 198, 198);
+}

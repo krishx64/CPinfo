@@ -68,6 +68,22 @@ app.post("/api/fetch", authenticateToken, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+app.get("/api/search", async (req, res) => {
+  try {
+    const { q } = req.query;
+    const users = await User.find({
+      $or: [
+        { username: { $regex: q, $options: "i" } },
+        { firstName: { $regex: q, $options: "i" } },
+        { lastName: { $regex: q, $options: "i" } },
+      ],
+    }).select("username firstName lastName");
+    res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 app.post("/api/signup", async (req, res) => {
   try {
     const { email, username } = req.body;
