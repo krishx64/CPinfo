@@ -1,6 +1,9 @@
 CPinfo is a full-stack web application designed to aggregate and visualize competitive programming profiles from platforms like Codeforces,CodeChef,LeetCode,HaackerRank and Atcoder. It enables users to input a username and fetch their latest contest statistics, problem-solving history, and rating progression.
 
 The backend is built with Node.js and Express, featuring secure JWT-based authentication with refresh token handling via HTTP-only cookies. User data is stored in MongoDB, and Redis caching is used to reduce API latency and improve performance.
+
+The project is live on: https://cpinfo-s6xv.onrender.com/
+My profile as an example: https://cpinfo-s6xv.onrender.com/user/jaiswalxkrish
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
