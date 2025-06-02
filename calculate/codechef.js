@@ -88,7 +88,7 @@ async function calculate_CC_stats(handle, username) {
       pagesUpdated: pagesUpdated,
       problemName: [],
     };
-    verdicts = verdicts.filter((submissions) => submissions.result != "");
+    verdicts = verdicts.filter((submissions) => submissions.result == "AC");
     let flag = new Map();
     problemUpdated.forEach((name) => {
       flag.set(name, 1);

@@ -46,18 +46,19 @@ async function fetchSolvedProblems(handle, minPage) {
       const $ = cheerio.load(`<table>${htmlContent}</table>`);
       const submissions = [];
       $("tr").each((i, row) => {
-        const cols = $(row)
-          .find("td")
-          .map((j, col) => $(col).text().trim())
-          .get();
+        const tds = $(row).find("td");
+        if (tds.length >= 4) {
+          const resultSpan = $(tds[2]).find("span");
+          const verdictTitle = resultSpan.attr("title") || "";
+          const verdict = verdictTitle.toLowerCase().includes("accepted")
+            ? "AC"
+            : "WA";
 
-        // If at least 3 columns and valid problem name, accept
-        if (cols.length >= 4 && cols[1] !== "") {
           submissions.push({
-            date: cols[0] || "",
-            problem: cols[1] || "",
-            result: cols[2] || "",
-            language: cols[3] || "",
+            date: $(tds[0]).text().trim() || "",
+            problem: $(tds[1]).text().trim() || "",
+            result: verdict,
+            language: $(tds[3]).text().trim() || "",
           });
         }
       });
