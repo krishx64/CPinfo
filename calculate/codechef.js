@@ -37,17 +37,18 @@ function parseRelativeToEpochSeconds(text) {
 
 async function calculate_CC_contestRatings(handle) {
   try {
-    const { ratingData: Contests } = await fetchContestData(handle);
-    let maxRating = 0,
-      currentRating = 0;
+    console.log(handle);
+    const {
+      ratingData: Contests,
+      highestRating: maxRating,
+      currentRating: currentRating,
+    } = await fetchContestData(handle);
     let contestRatings = [];
     for (let i = 0; i < Contests.length; i++) {
       let someDate = new Date(Contests[i].end_date);
       someDate = someDate.getTime();
       let temp = [new Date(someDate)];
       temp.push(parseInt(Contests[i].rating));
-      currentRating = Contests[i].rating;
-      if (currentRating > maxRating) maxRating = currentRating;
       contestRatings.push(temp);
     }
     return { contestRatings, maxRating, currentRating };

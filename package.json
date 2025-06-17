@@ -11,6 +11,7 @@
     "cra-template": "1.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsdom": "^26.1.0",
     "jsonwebtoken": "^9.0.2",
     "leetcode-query": "^2.0.0",
     "mongoose": "^8.13.1",

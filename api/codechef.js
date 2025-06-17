@@ -1,15 +1,63 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+const { JSDOM } = require("jsdom");
 async function fetchContestData(handle) {
   try {
-    const response = await fetch(
-      `https://codechef-api.vercel.app/handle/${handle}`
-    );
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error: ", error);
-    throw new Error(error);
+    const resdata = await fetch(`https://www.codechef.com/users/${handle}`);
+    if (resdata.status == 200) {
+      let d = await resdata.text();
+      let data = { data: d };
+      let heatMapDataCursour1 =
+        data.data.search("var userDailySubmissionsStats =") +
+        "var userDailySubmissionsStats =".length;
+      let heatMapDataCursour2 = data.data.search("'#js-heatmap") - 34;
+      let heatDataString = data.data.substring(
+        heatMapDataCursour1,
+        heatMapDataCursour2
+      );
+      // console.log(heatDataString)
+      let headMapData = JSON.parse(heatDataString);
+      let allRating =
+        data.data.search("var all_rating = ") + "var all_rating = ".length;
+      let allRating2 = data.data.search("var current_user_rating =") - 6;
+      let ratingData = JSON.parse(data.data.substring(allRating, allRating2));
+      let dom = new JSDOM(data.data);
+      let document = dom.window.document;
+      return {
+        success: true,
+        status: resdata.status,
+        profile: document.querySelector(".user-details-container").children[0]
+          .children[0].src,
+        name: document.querySelector(".user-details-container").children[0]
+          .children[1].textContent,
+        currentRating: parseInt(
+          document.querySelector(".rating-number")?.textContent
+        ),
+        highestRating: parseInt(
+          document
+            .querySelector(".rating-number")
+            ?.parentNode?.children[4]?.textContent?.split("Rating")[1]
+        ),
+        countryFlag: document.querySelector(".user-country-flag").src,
+        countryName: document.querySelector(".user-country-name").textContent,
+        globalRank: parseInt(
+          document.querySelector(".rating-ranks")?.children[0]?.children[0]
+            ?.children[0]?.children[0]?.innerHTML
+        ),
+        countryRank: parseInt(
+          document.querySelector(".rating-ranks")?.children[0]?.children[1]
+            ?.children[0]?.children[0]?.innerHTML
+        ),
+        stars: document.querySelector(".rating")?.textContent || "unrated",
+        heatMap: headMapData,
+        ratingData,
+      };
+    } else {
+      return { success: false, status: resdata.status };
+    }
+  } catch (e) {
+    console.log(e);
+    return { success: false, status: 404 };
   }
 }
 async function fetchSolvedCount(handle) {
@@ -27,7 +75,6 @@ async function fetchSolvedCount(handle) {
   } catch (error) {
     console.error("Error fetching data:", error.message);
     throw new Error(error);
-    return null;
   }
 }
 async function fetchSolvedProblems(handle, minPage) {
