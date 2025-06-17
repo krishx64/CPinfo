@@ -1,4 +1,8 @@
-const { fetchProblemData, fetchContestData } = require("../api/leetcode.js");
+const {
+  fetchProblemData,
+  fetchContestData,
+  fetchSubmissionCalendar,
+} = require("../api/leetcode.js");
 async function calculate_LC_contestRatings(handle) {
   try {
     let contestRatings = [];
@@ -36,7 +40,7 @@ async function calculate_LC_SolvedCount(handle) {
 async function calculate_LC_stats(handle) {
   try {
     const response = await fetchProblemData(handle);
-    const data = await fetchProblemData(handle);
+    const data = response;
     const totalSubmissions =
       data.matchedUser.submitStats.totalSubmissionNum[0].submissions;
     let league = "Unranked";
@@ -49,9 +53,7 @@ async function calculate_LC_stats(handle) {
       difficulty: [],
       league,
     };
-    const submissionCalendar = JSON.parse(
-      response.matchedUser.submissionCalendar
-    );
+    const submissionCalendar = await fetchSubmissionCalendar(handle);
     for (const [timestamp, count] of Object.entries(submissionCalendar)) {
       stats.solved.push([timestamp, parseInt(count)]);
     }

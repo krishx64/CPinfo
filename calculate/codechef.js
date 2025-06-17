@@ -37,7 +37,6 @@ function parseRelativeToEpochSeconds(text) {
 
 async function calculate_CC_contestRatings(handle) {
   try {
-    console.log(handle);
     const {
       ratingData: Contests,
       highestRating: maxRating,
