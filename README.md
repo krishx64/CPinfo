@@ -6,6 +6,42 @@ The project is live on: https://cpinfo-s6xv.onrender.com/
 
 My profile as an example: https://cpinfo-s6xv.onrender.com/user/jaiswalxkrish
 
+# How to get started
+
+Open the site with the link:- https://cpinfo-s6xv.onrender.com/
+
+You will be greeted with a login page, if you haven't signed up yet click on the sign up page from top right menu corner (image attached below for reference)
+![Alt text](assets/signup-page.png)
+
+Fill in your details and click Sign-up, and you are done!
+
+Then go to the login page and login with you credentials.
+
+![Alt text](assets/login-page.png)
+
+After successfully logging in, your profile will be empty because your handles from various platforms have not been added yet, you can add them from the settings tab (image attached below for reference)
+![Alt text](assets/Dashboard.png)
+
+![Alt text](assets/settings-page.png)
+
+You can give handles for whichever platform you use and click update so the changes are saved, once saved you won't have to type them again(you can also change them anytime). For everytime you want to update your profile and fetch statistics from all the platform go to settings and click on update. Once the confirmation alert is recieved in bottom right you can go back to your profile from the top menu and wait a minute to refresh and your stats will be there.
+
+Note:- Codechef might take time (excessive time in some cases) due to their API's being rate limited. If you have excessive submission it might take 30 mins - 1hr depending on the total number of your submissions. But once done for the first time every other time it will be very quick! So it's just a one time thing.
+
+After everything is updated your profile will look something like this (taking my profile as an example)
+
+![Alt text](assets/updatedDashboard.png)
+
+You can also see platform specific statistics, the menu featuring all the platform names and solved count is clickable and you can view various statistics to understand and track progress on each platform better(image attached below for reference).
+
+![Alt text](assets/cfDashboard.png)
+![Alt text](assets/ccDashboard.png)
+![Alt text](assets/acDashboard.png)
+![Alt text](assets/lcDashboard.png)
+![Alt text](assets/hrDashboard.png)
+
+That is all!
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

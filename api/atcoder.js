@@ -1,5 +1,18 @@
+/**
+ * AtCoder API utilities for fetching user contest history, solved count, and submission data.
+ *
+ * Exports:
+ *   - fetchContestData: Fetches user contest history.
+ *   - fetchProblemSolvedCount: Fetches the total number of problems solved by a user.
+ *   - fetchProblemData: Fetches all submission data for a user.
+ */
+
+/**
+ * Fetches AtCoder user's contest history.
+ * @param {string} handle - AtCoder username.
+ * @returns {Promise<Object[]>} Array of contest history objects.
+ */
 async function fetchContestData(handle) {
-  //fetch users contest history
   try {
     const response = await fetch(
       `https://thingproxy.freeboard.io/fetch/https://atcoder.jp/users/${handle}/history/json`
@@ -11,8 +24,13 @@ async function fetchContestData(handle) {
     throw new Error(error);
   }
 }
+
+/**
+ * Fetches the total number of problems solved by a user on AtCoder.
+ * @param {string} handle - AtCoder username.
+ * @returns {Promise<Object>} Object containing solved count and user info.
+ */
 async function fetchProblemSolvedCount(handle) {
-  //fetch users total problem solved count
   try {
     const response = await fetch(
       `https://thingproxy.freeboard.io/fetch/https://kenkoooo.com/atcoder/atcoder-api/v3/user/ac_rank?user=${handle}`
@@ -24,8 +42,14 @@ async function fetchProblemSolvedCount(handle) {
     throw new Error(error);
   }
 }
+
+/**
+ * Fetches all submission data for a user from a given time.
+ * @param {string} handle - AtCoder username.
+ * @param {number} time - Unix timestamp (seconds) to fetch submissions from.
+ * @returns {Promise<Object[]>} Array of submission objects.
+ */
 async function fetchProblemData(handle, time) {
-  //fetch all of users submission data
   try {
     const response = await fetch(
       `https://thingproxy.freeboard.io/fetch/https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=${handle}&from_second=${time}`
@@ -37,6 +61,7 @@ async function fetchProblemData(handle, time) {
     throw new Error(error);
   }
 }
+
 module.exports = {
   fetchContestData,
   fetchProblemSolvedCount,

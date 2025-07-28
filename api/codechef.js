@@ -15,7 +15,6 @@ async function fetchContestData(handle) {
         heatMapDataCursour1,
         heatMapDataCursour2
       );
-      // console.log(heatDataString)
       let headMapData = JSON.parse(heatDataString);
       let allRating =
         data.data.search("var all_rating = ") + "var all_rating = ".length;

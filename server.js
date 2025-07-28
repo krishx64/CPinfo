@@ -17,7 +17,7 @@ const cors = require("cors");
 
 const DEFAULT_EXPIRATION = 3600;
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3001", // Use environment variable for production
+  origin: process.env.FRONTEND_URL, // Use environment variable for production
   credentials: true, // Allow cookies to be sent
 };
 
