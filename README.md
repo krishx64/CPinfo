@@ -34,7 +34,7 @@ After everything is updated your profile will look something like this (taking m
 
 You can also see platform specific statistics, the menu featuring all the platform names and solved count is clickable and you can view various statistics to understand and track progress on each platform better(image attached below for reference).
 
-![Alt text](assets/cfDashboard.png)
+![Alt text](assets/cfdashboard.png)
 ![Alt text](assets/ccDashboard.png)
 ![Alt text](assets/acDashboard.png)
 ![Alt text](assets/lcDashboard.png)
