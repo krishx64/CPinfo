@@ -15,7 +15,7 @@
 async function fetchContestData(handle) {
   try {
     const response = await fetch(
-      `https://thingproxy.freeboard.io/fetch/https://atcoder.jp/users/${handle}/history/json`
+      `https://atcoder.jp/users/${handle}/history/json`
     );
     const data = await response.json();
     return data;
@@ -33,7 +33,7 @@ async function fetchContestData(handle) {
 async function fetchProblemSolvedCount(handle) {
   try {
     const response = await fetch(
-      `https://thingproxy.freeboard.io/fetch/https://kenkoooo.com/atcoder/atcoder-api/v3/user/ac_rank?user=${handle}`
+      `https://kenkoooo.com/atcoder/atcoder-api/v3/user/ac_rank?user=${handle}`
     );
     const data = await response.json();
     return data;
@@ -52,7 +52,7 @@ async function fetchProblemSolvedCount(handle) {
 async function fetchProblemData(handle, time) {
   try {
     const response = await fetch(
-      `https://thingproxy.freeboard.io/fetch/https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=${handle}&from_second=${time}`
+      `https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=${handle}&from_second=${time}`
     );
     const data = await response.json();
     return data;
